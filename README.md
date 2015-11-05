@@ -24,29 +24,29 @@ Filename | Whole Article
 :----------|:--------------
 2142423|The whole artice as a single string
 		  
-  a. Create inverted index [`Lucene`](https://lucene.apache.org/core/) on the file or db whichever is faster(easy)  
+  * Create inverted index [`Lucene`](https://lucene.apache.org/core/) on the file or db whichever is faster(easy)  
    
-1. Stage 2  
+####1. Stage 2  
 
-  a. Get the `EPO` db from freebase(or anywhere) __READYMADE__
-  a. Create the `EPO` db
-     a. EPO is the primary key
+  * Get the `EPO` db from freebase(or anywhere) __READYMADE__
+  * Create the `EPO` db
+     * EPO is the primary key
 
 Entity|Predicate|Object|List of Phrases
 :-----|:--------|:-----|:---------------
 SRK|cast|My Name is Khan|null
 		
-  a. Start the process of finding new relations and dumping it with the known predicate  
-        a. `Complex Long process,Leave this for vacation`
-        b. List of Phrases come from `WikiDB` by querying the `E` in `Inverted Index`
+  * Start the process of finding new relations and dumping it with the known predicate  
+        * `Complex Long process,Leave this for vacation`
+        * List of Phrases come from `WikiDB` by querying the `E` in `Inverted Index`
   
 Entity|Predicate|Object|List of Phrases
 :-----|:--------|:-----|:---------------
 SRK|cast|My Name is Khan|[Acted in,Shooted for,Worked in]  
 
-1. Stage 3
+####1. Stage 3
 
-  1 #####Cleanup
+  1. #####Cleanup
   1. Get the category Graph.Hierarchy from somewhere(FB,dbpedia...)
   1. Mark the corrsponding edges with`P` with the list of phrases
   1. Assign Weights
