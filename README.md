@@ -23,6 +23,6 @@
   - Start the process of finding new relations and dumping it with the known predicate  
         - `  Complex Long process,Leave this for vacation`
   
-		Entity|Predicate|Object|List of Phrases
-		:-----|:--------|:-----|:---------------
-		SRK|cast|My Name is Khan|[Acted in,Shooted for,Worked in]
+Entity|Predicate|Object|List of Phrases
+:-----|:--------|:-----|:---------------
+SRK|cast|My Name is Khan|[Acted in,Shooted for,Worked in]
