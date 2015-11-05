@@ -4,9 +4,9 @@
   - install postgresql
   - Import all files to db with 2 cols..primary key as file name   
   
-		 Filename | Whole Article
-		  :----------|:--------------
-		  2142423|The whole artice as a single string
+Filename | Whole Article
+:----------|:--------------
+2142423|The whole artice as a single string
 		  
   - Create inverted index lucene on the file or db whichever is faster(easy)
    
@@ -16,12 +16,12 @@
   - Create the EPO db
      - EPO is the primary key
 
-             Entity|Predicate|Object|List of Phrases
-		:-----|:--------|:-----|:---------------
-		SRK|cast|My Name is Khan|null
+Entity|Predicate|Object|List of Phrases
+:-----|:--------|:-----|:---------------
+SRK|cast|My Name is Khan|null
 		
   - Start the process of finding new relations and dumping it with the known predicate  
-        - `  Complex Long process,Leave this for vacation`
+        - `Complex Long process,Leave this for vacation`
   
 Entity|Predicate|Object|List of Phrases
 :-----|:--------|:-----|:---------------
