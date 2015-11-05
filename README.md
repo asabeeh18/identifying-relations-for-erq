@@ -16,9 +16,3 @@
 Entity|Predicate|Object|List of Phrases
 -----:|--------:|:-----:|:---------------
 SRK|cast|My Name is Khan|[Acted in,Shooted for,Worked in]
-
-Right     | Left   | Center 
----------:| :----- |:-----:
-Computer  |  $1600 | one
-Phone     |    $12 | three
-Pipe      |     $1 | eleven
