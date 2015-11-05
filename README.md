@@ -12,36 +12,41 @@
 1. Read about [Lucene](https://lucene.apache.org/core/) index and write the code to create inverted index on our files/db call it inverted index for now :/ .       
 2. Get the EPO Databse.
 
-#PROCEDURE
+#PROCEDURE      
 
-1.  Stage 1 
 
-  a Linux
-  a Install postgresql
-  a Export all Wikipedia files to db with 2 cols,primary key as file name   
+####1. Stage 1
+  * Linux  
+  * Install postgresql  
+  * Export all Wikipedia files to db with 2 cols,primary key as file name   
   
 Filename | Whole Article
 :----------|:--------------
 2142423|The whole artice as a single string
 		  
-  a Create inverted index [`Lucene`](https://lucene.apache.org/core/) on the file or db whichever is faster(easy)
+  a. Create inverted index [`Lucene`](https://lucene.apache.org/core/) on the file or db whichever is faster(easy)  
    
-1. Stage 2
+1. Stage 2  
 
-  a Get the `EPO` db from freebase(or anywhere) __READYMADE__
-  a Create the `EPO` db
-     a EPO is the primary key
+  a. Get the `EPO` db from freebase(or anywhere) __READYMADE__
+  a. Create the `EPO` db
+     a. EPO is the primary key
 
 Entity|Predicate|Object|List of Phrases
 :-----|:--------|:-----|:---------------
 SRK|cast|My Name is Khan|null
 		
-  a Start the process of finding new relations and dumping it with the known predicate  
-        a `Complex Long process,Leave this for vacation`
-        b List of Phrases come from `WikiDB` by querying the `E` in `Inverted Index`
+  a. Start the process of finding new relations and dumping it with the known predicate  
+        a. `Complex Long process,Leave this for vacation`
+        b. List of Phrases come from `WikiDB` by querying the `E` in `Inverted Index`
   
 Entity|Predicate|Object|List of Phrases
 :-----|:--------|:-----|:---------------
-SRK|cast|My Name is Khan|[Acted in,Shooted for,Worked in]
+SRK|cast|My Name is Khan|[Acted in,Shooted for,Worked in]  
 
 1. Stage 3
+
+  1 #####Cleanup
+  1. Get the category Graph.Hierarchy from somewhere(FB,dbpedia...)
+  1. Mark the corrsponding edges with`P` with the list of phrases
+  1. Assign Weights
