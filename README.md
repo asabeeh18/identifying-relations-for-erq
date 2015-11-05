@@ -28,9 +28,9 @@ Filename | Whole Article
    
 ####1. Stage 2  
 
-  * Get the `EPO` db from freebase(or anywhere) __READYMADE__
+  * Get the `EPO`(Entity Predicate Object) db from freebase(or anywhere) __READYMADE__
   * Create the `EPO` db
-     * EPO is the primary key
+     * `EPO` is the primary key
 
 Entity|Predicate|Object|List of Phrases
 :-----|:--------|:-----|:---------------
