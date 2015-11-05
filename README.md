@@ -47,6 +47,6 @@ SRK|cast|My Name is Khan|[Acted in,Shooted for,Worked in]
 ####1. Stage 3
 
   1. #####Cleanup
-  1. Get the category Graph.Hierarchy from somewhere(FB,dbpedia...)
+  1. Get the category Graph/Hierarchy from somewhere(FB,dbpedia...)
   1. Mark the corrsponding edges with`P` with the list of phrases
   1. Assign Weights
