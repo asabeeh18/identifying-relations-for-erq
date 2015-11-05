@@ -13,8 +13,9 @@
   - Get the SPO db from freebase(or anywhere)
   - start the process of finding new raltions and dumping it with the known predicate  
   
-       Entity|Predicate|Object|List of Phrases
-       -----:|--------:|-----:|----------------
+Entity|Predicate|Object|List of Phrases
+-----:|--------:|:-----:|:---------------
+SRK|cast|My Name is Khan|[Acted in,Shooted for,Worked in]
 
 Right     | Left   | Center 
 ---------:| :----- |:-----:
