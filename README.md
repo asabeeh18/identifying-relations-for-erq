@@ -14,4 +14,10 @@
   - start the process of finding new raltions and dumping it with the known predicate  
   
        Entity|Predicate|Object|List of Phrases
-       ------------------------------------------
+       -----:|--------:|-----:|----------------
+
+Right     | Left   | Center 
+---------:| :----- |:-----:
+Computer  |  $1600 | one
+Phone     |    $12 | three
+Pipe      |     $1 | eleven
