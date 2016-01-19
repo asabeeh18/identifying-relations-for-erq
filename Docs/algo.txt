@@ -1,0 +1,51 @@
+Stage 1
+
+1. Export all Wikipedia files to database
+2. Create inverted index on the data
+3. Get the EPO(Entity Predicate Object) database from freebase(or anywhere) READYMADE
+which has the infobox data in structured form - dbpedia.org
+
+Like this:
+Entity(Entity1)	Predicate	Object(Entity2)
+SRK				cast	    My Name is Khan
+
+4. Start the process of finding new relations and adding it to the list of known predicates
+Something like
+
+Entity(Entity1)	Predicate	Object(Entity2)			List of Phrases
+SRK				cast	    My Name is Khan			[Acted in,Shooted for,Worked in]
+	
+	-use TAGME to convert Entities to their respective WikiID
+	-Simply match the sentences in wikipedia with Entity1 and Entity2 (using inverted index),extract the remaining thing in the sentences
+	-That is our new phrase which matches the given predicate
+	- Call this the EPO table
+
+Stage 2
+include categories
+unclear to me.What is the purpose of including categories?
+
+5. Get the category Graph/Hierarchy from somewhere(FB,dbpedia...) 
+6. Get a dataset which tells what entity belongs to which all categories(wikipedia does this)
+7. For each row in EPO connect the entity 
+
+Example
+node	edge								node(s)
+SRK---[Acted in,Shooted for,Worked in]----[My Name is Khan,...,..]
+
+OR we connect the categories. It's still unclear to me.
+
+-If we connect the category
+actor---[Acted in,Shooted for,Worked in]----movie name
+
+and run the query 
+SRK worked in ??
+
+we will land up at category:movie name. But I can't figure out now how to filter out movie names belonging to SRK only
+
+-and if we connect Entities only(not their categories).It gets very restrictive with very limited useability.
+
+In the end we have a graph structure with nodes as Entity and edges as the predicates.
+=========================
+Confidence Level,Ranking
+No phrases found
+TAGME problems

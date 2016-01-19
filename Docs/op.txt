@@ -1,0 +1,1 @@
+F:\Final Year Project\reverb.txt	1	This	has to be	the first non comment line of the document	0	1	1	4	4	12	0.8559198574076653	This has to be the first non comment line of the document .	DT VBZ TO VB DT JJ JJ NN NN IN DT NN .	B-NP B-VP I-VP I-VP B-NP I-NP I-NP I-NP I-NP I-NP I-NP I-NP O	this	have to be	the first non comment line of the document
