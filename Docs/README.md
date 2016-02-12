@@ -1,13 +1,13 @@
 #TODO LIST
 
-####Dhruv
+
 
 1. Install Linux Ubuntu based (preferably Lubuntu)  
 1. Install and read about PostgreSQL  
 1. Unzip the Wikipedia file. _LOTS OF TIME_
 1. Code and put all the Wikipedia files on the database, call it WikiDB . _LOTS OF TIME_
 
-####Tembe
+
 
 1. Read about [Lucene](https://lucene.apache.org/core/) index and write the code to create inverted index on our files/db call it inverted index for now :/ .       
 2. Get the EPO Databse.
