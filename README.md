@@ -26,9 +26,9 @@
     2. https://gist.github.com/fernandoaleman/2172388
     
     3.
-        # vi /etc/sysconfig/network-scripts/ifcfg-eth0
-        DEVICE=eth0
-        HWADDR=1c:65:9d:93:fc:e1
+        # vi /etc/sysconfig/network-scripts/ifcfg-eth0 
+        DEVICE=eth0 
+        HWADDR=1c:65:9d:93:fc:e1 
         TYPE=Ethernet
         ONBOOT=yes
         BOOTPROTO=none
@@ -46,7 +46,9 @@
         GATEWAY=192.168.0.1 
 1. Get hadoop working  
         1. Uninstall old java  
-        2. Put new java  
+            dpkg --force-depends --purge openjdk-6-jre-headless openjdk-6-jre-lib icedtea-6-jre-jvmvm
+            rpm should do :/ 
+        2. Put new java   
         3.*poof*
 1. Unzip and split the Wikipedia file. 5-7 GB splits.  _LOTS OF TIME_
     `split -b 1024m "file.tar.gz" "file.tar.gz.part-"`
