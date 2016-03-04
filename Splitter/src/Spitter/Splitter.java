@@ -7,10 +7,12 @@ package Spitter;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.Stack;
 
 /**
@@ -31,24 +33,27 @@ public class Splitter {
                 ARTICLES = "Stage1_Articles/",
                 CONTENT = "content/",
                 REDIRECTS = "redirect/",
-                INFOBOX_OPEN = "{{Infobox";
-        //BufferedWriter output;
-        // TODO code application logic here
-        int start = 104851;//Integer.parseInt(args[0]);
+                INFOBOX_OPEN = "{{Infobox"; //Except this the rest are Path to files
+        int start = 1;//Integer.parseInt(args[0]);
         int end = Integer.MAX_VALUE;
+        PrintWriter out=new PrintWriter(new File("OutputLogger.log"));
+        //BufferedWriter output;
+
         if (args.length > 1)
         {
             end = Integer.parseInt(args[0]);
         }
         BufferedReader file;
+        String fileName = "";
         for (int currentFile = start; currentFile <= end; currentFile++)
         {
             try
             {
-                file = new BufferedReader(new FileReader(ARTICLES + currentFile + ""));
+                fileName = ARTICLES + currentFile + "";
+                file = new BufferedReader(new FileReader(fileName));
             } catch (Exception e)
             {
-                System.out.println("NOT FOUND");
+                out.println("NOT FOUND: " + fileName);
                 continue;
             }
             String idLine = file.readLine();
@@ -60,7 +65,7 @@ public class Splitter {
             String contentLine = file.readLine();
             if (contentLine.substring(0, 9).equals(REDIRECT))
             {
-                //OOPS! It was a redirect File
+                //It is a redirect File
                 //public FileWriter(File file,boolean append)throws IOException
                 String targetName = contentLine.substring(
                         contentLine.indexOf("[[") + 2,
@@ -69,10 +74,15 @@ public class Splitter {
                 {
                     output.write(idLine);
                     output.close();
+                } catch (Exception e)
+                {
+                    e.printStackTrace();
+                    out.println("Error Writing REDIRECT Skipping File: " + currentFile);
+                    continue;
                 }
             } else
             {
-                //YIPEE good Content
+                // good Content
                 int infoboxStart = contentLine.indexOf(INFOBOX_OPEN);
                 int lastInfoboxStart = 0;
                 int lastInfoboxEnd = 0;
@@ -82,8 +92,8 @@ public class Splitter {
                     lastInfoboxEnd = infoboxEndFinder(lastInfoboxStart, contentLine);
                     if (lastInfoboxEnd == -1)
                     {
-                        System.out.println("Critical Error!! Malformed Infobox Brackets\nArticle: " + currentFile + " Infobox Start: " + infoboxStart);
-                        System.out.println("---Skipped Article---");
+                        out.println("Critical Error!! Malformed Infobox Brackets\nArticle: " + currentFile + " Infobox Start: " + infoboxStart);
+                        out.println("---Skipped Article---");
                         continue;
                     }
                     //Store infobox in seperate folder
@@ -92,22 +102,33 @@ public class Splitter {
                         output.write(idLine + "\n");
                         output.write(contentLine.substring(infoboxStart, lastInfoboxEnd));
                         output.close();
+                    } catch (Exception e)
+                    {
+                        e.printStackTrace();
+                        out.println("Error Writing INFOBOX. Skipping File: " + currentFile);
+                        continue;
                     }
                 }
-                
+
                 //Store Content
                 try (BufferedWriter output = new BufferedWriter(new FileWriter(CONTENT + currentFile)))
                 {
                     output.write(idLine + "\n");
                     /*
-                            output.write(contentLine.substring(0, infoboxStart<0?0:infoboxStart) + contentLine.substring(lastInfoboxEnd, contentLine.length()));
-                            Omit the 1st substring part cause it mostly contains Disambiguations
-                    */
+                     output.write(contentLine.substring(0, infoboxStart<0?0:infoboxStart) + contentLine.substring(lastInfoboxEnd, contentLine.length()));
+                     Omit the 1st substring part cause it mostly contains Disambiguations
+                     */
                     output.write(contentLine.substring(lastInfoboxEnd, contentLine.length()));
                     output.close();
                 }
+                catch (Exception e)
+                {
+                    e.printStackTrace();
+                    out.println("Error Writing CONTENT. Skipping File: "+currentFile);
+                    continue;
+                }
             }
-            System.out.println(currentFile + ": ALL OK");
+            out.println("OK  " + currentFile);
         }
     }
 
@@ -127,7 +148,7 @@ public class Splitter {
                 s.pop();
                 if (s.isEmpty())
                 {
-                    return i + 3+lastInfoboxStart;
+                    return i + 3 + lastInfoboxStart;
                 }
             }
         }

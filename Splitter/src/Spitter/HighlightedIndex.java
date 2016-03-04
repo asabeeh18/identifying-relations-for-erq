@@ -27,6 +27,7 @@ import org.apache.lucene.search.Query;
 import org.apache.lucene.search.TopDocs;
 
 import org.apache.lucene.analysis.TokenStream;
+import org.apache.lucene.analysis.tokenattributes.PackedTokenAttributeImpl;
 import org.apache.lucene.document.Field;
 import org.apache.lucene.document.StringField;
 import org.apache.lucene.queryparser.classic.QueryParser;
@@ -113,7 +114,10 @@ class HighlightedIndex {
 
             TopDocs topDocs = searcher.search(query, MAX_DOC);
             ScoreDoc scoreDocs[] = topDocs.scoreDocs;
-
+            
+            PackedTokenAttributeImpl po=new PackedTokenAttributeImpl();
+            int off=po.startOffset();
+            System.out.println(off+"");
             for (ScoreDoc scoreDoc : scoreDocs)
             {
                 Document document = searcher.getDocument(scoreDoc.doc);

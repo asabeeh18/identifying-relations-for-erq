@@ -6,9 +6,15 @@ import org.apache.hadoop.io.WritableComparable;
 
 public class Node implements WritableComparable<Node> {
        // Some data
-       private String subject;
-       private String object;
-       private String predicate;
+       String subject;
+       String object;
+       String predicate;
+       Node(String subject,String predicate,String object)
+       {
+           subject=this.subject;
+           object=this.object;
+           predicate=this.predicate;
+       }
        public void write(DataOutput out) throws IOException {
          out.writeUTF(subject);
          out.writeUTF(object);
