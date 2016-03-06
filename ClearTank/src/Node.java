@@ -9,22 +9,27 @@ public class Node implements WritableComparable<Node> {
        String subject;
        String object;
        String predicate;
-       Node(String subject,String predicate,String object)
-       {
-           subject=this.subject;
-           object=this.object;
-           predicate=this.predicate;
-       }
+
+    public Node(String s,String o,String p)
+    {
+        subject=s;
+        predicate=p;
+        object=o;
+    }
+       
+       @Override
        public void write(DataOutput out) throws IOException {
          out.writeUTF(subject);
          out.writeUTF(object);
        }
        
+       @Override
        public void readFields(DataInput in) throws IOException {
          subject = in.readUTF();
          object = in.readUTF();
        }
        
+       @Override
        public int compareTo(Node o) {
     	   if(subject.compareTo(o.subject)==0)
     	   {

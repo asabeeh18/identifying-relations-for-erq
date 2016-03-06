@@ -1,19 +1,22 @@
 
 import org.apache.hadoop.io.Text;
-
 import com.hp.hpl.jena.query.*;
 import com.hp.hpl.jena.rdf.model.RDFNode;
-import java.util.Queue;
+import java.io.IOException;
+import java.util.HashSet;
+import java.util.Set;
+import org.apache.hadoop.mapreduce.Reducer;
 
 import virtuoso.jena.driver.*;
 
-class Relationships {
+class Relationships extends Reducer<Node, Text, Text, Text> {
 
     private static final int MAX_DEPTH = 7;
     String url = "jdbc:virtuoso://localhost:1111";
     VirtGraph connection;
     VirtuosoUpdateRequest vur;
-
+    static Set<Node> edges = new HashSet<>();
+    
     Relationships()
     {
         connection = new VirtGraph(url, "dba", "dba");
@@ -21,7 +24,6 @@ class Relationships {
 
     void classify(Node start, Iterable<Text> predicates)
     {
-        toDbpedia(start);
         ResultSet results = runQuery("SELECT ?o FROM <categories> WHERE { " + start.subject + " ?p ?o }");
         while (results.hasNext())
         {
@@ -30,28 +32,62 @@ class Relationships {
             dfs(o, 0);
         }
     }
-
-    void dfs(RDFNode begin, int depth)
+    Text predicateLine(Node start, Iterable<Text> predicates)
     {
+        String lineOfPredicates = start.predicate + "    ";
+        for (Text pred : predicates)
+        {
+            lineOfPredicates += pred + " ";
+        }
+        return new Text(lineOfPredicates);
+    }
+    boolean dfs(RDFNode begin, int depth)
+    {
+        boolean path=false;
         ResultSet results = runQuery("SELECT ?o FROM <category.categories> WHERE { " + begin + " ?p ?o }");
-        if(depth==7)
-            return;
+        if(hasPath(results))
+            path=true;
         
+        if (depth == 7)
+        {
+            return path;
+        }
         while (results.hasNext())
         {
+            
             QuerySolution rs = results.nextSolution();
             RDFNode o = rs.get("o");
             /*
-            create edge between begin and o with predicate
-            str = "INSERT INTO GRAPH <category.paths> {" +begin+" "+node.predicate+" "+o+"  }";
-            vur = VirtuosoUpdateFactory.create(str, set);
-            vur.exec();
-            OR
-            create edge between end terminals only
-            INSERT INTO GRAPH <terminal.paths> 
-            */
-            dfs(o, depth+1);
+             create edge between begin and o with predicate
+             str = "INSERT INTO GRAPH <category.paths> {" +begin+" "+node.predicate+" "+o+"  }";
+             vur = VirtuosoUpdateFactory.create(str, set);
+             vur.exec();
+             OR
+             create edge between end terminals only
+             INSERT INTO GRAPH <terminal.paths> 
+             */
+            boolean returnValue=dfs(o, depth + 1);
+            if(returnValue)
+            {
+                if(!edges.add())
+                {
+                    edges.remove(o.toString());
+                   
+                    //remove increment add
+                }
+            }
+            path=returnValue | path;
         }
+        return path;
+    }
+
+    @Override
+    public void reduce(Node key, Iterable<Text> values, Context context) throws IOException, InterruptedException
+    {
+        
+        System.out.println("Reducer: " + key);
+        classify(key, values);
+        context.write(new Text(key.predicate),predicateLine(key,values));
     }
 
     ResultSet runQuery(String query)
@@ -71,11 +107,11 @@ class Relationships {
 
     public static void main(String[] args)
     {
-        Relationships r=new Relationships();
-        Text a=new Text(),b=new Text();
+        Relationships r = new Relationships();
+        Text a = new Text(), b = new Text();
         a.set("A");
         b.set("B");
-        Node n=new Node("A","p","C");
+        Node n = new Node("A", "p", "C");
         r.classify(n, null);
     }
 
@@ -125,4 +161,11 @@ class Relationships {
 //        }
 //
 //    }
+
+    private boolean hasPath(ResultSet results)
+    {
+        //Do any of the o's correspond to category belonging to ENtity-category graph
+        
+        return false;
+    }
 }
