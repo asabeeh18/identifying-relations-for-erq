@@ -30,8 +30,8 @@ class VirtuosoSPARQL {
         VirtuosoUpdateRequest vur = VirtuosoUpdateFactory.create(str, set);
         vur.exec();
 
-        System.out.println("\nexecute: INSERT INTO GRAPH <http://test1> { <aa> <bb> 'cc' . <aa1> <bb1> 123. }");
-        str = "INSERT INTO GRAPH <http://test1> { <aa> <bb> 'cc' . <aa1> <bb1> 123. }";
+        System.out.println("\nexecute: INSERT INTO GRAPH <http://test1> { <aa> <bb> 'cc'. <aa1> <bb1> 123. }");
+        str = "INSERT INTO GRAPH <http://test1> { <aa> <bb> 'cc'.<aa1> <bb1> 123. }";
         vur = VirtuosoUpdateFactory.create(str, set);
         vur.exec();
 
@@ -50,7 +50,8 @@ class VirtuosoSPARQL {
             RDFNode s = rs.get("s");
             RDFNode p = rs.get("p");
             RDFNode o = rs.get("o");
-            System.out.println(" { " + s + " " + p + " " + o + " . }");
+            RDFNode j = rs.get("j");
+            System.out.println(" { " + s + " " + p + " " + o + " "+j+" . }");
         }
 
         System.out.println("\nexecute: DELETE FROM GRAPH <http://test1> { <aa> <bb> 'cc' }");
@@ -69,6 +70,5 @@ class VirtuosoSPARQL {
             RDFNode o = rs.get("o");
             System.out.println(" { " + s + " " + p + " " + o + " . }");
         }
-
     }
 }
