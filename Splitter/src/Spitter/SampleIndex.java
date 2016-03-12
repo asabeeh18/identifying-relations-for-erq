@@ -49,7 +49,7 @@ public class SampleIndex {
     public static void main(String[] args) throws LockObtainFailedException, IOException, ParseException, org.apache.lucene.queryparser.classic.ParseException
     {
         //createIndex();
-        searchIndex("islamic AND revolution AND 1979");
+        searchIndex("+islamic +revolution +1979");
     }
 
     public static void createIndex() throws CorruptIndexException, LockObtainFailedException, IOException

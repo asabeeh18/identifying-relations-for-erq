@@ -23,6 +23,7 @@ public class Intersector {
     job.setJobName("Intersector");
 
     
+    
     FileInputFormat.addInputPath(job, new Path(args[0]));
     FileOutputFormat.setOutputPath(job, new Path(args[1]));
     NLineInputFormat.setNumLinesPerSplit(job,2);
@@ -36,5 +37,6 @@ public class Intersector {
     System.exit(job.waitForCompletion(true) ? 0 : 1);
     System.out.println("Exit JOB");
   }
+  
 }
 // ^^ MaxTemperature
