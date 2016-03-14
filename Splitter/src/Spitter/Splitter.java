@@ -27,7 +27,53 @@ public class Splitter {
      * @throws java.io.FileNotFoundException
      */
     //run with start  end
+    static PrintWriter out;
+    static int start,
+            end,
+            currentFile,
+            count,
+            goodInfoboxCount,
+            badInfoboxCount,
+            contentCount,
+            redirectCount,
+            exceptionCount;
+
     public static void main(String[] args) throws FileNotFoundException, IOException, Exception
+    {
+        Scanner r = new Scanner(System.in);
+        System.out.println("Enter Process Id: ");
+        int id = r.nextInt();
+        System.out.println("Enter Start file name: ");
+        start = r.nextInt();
+        System.out.println("Enter End file name: ");
+        end = r.nextInt();
+        out = new PrintWriter(new File("OutputLogger_" + id + ".log"));
+        //BufferedWriter output;
+        currentFile = start;
+        while (start <= end)
+        {
+            try
+            {
+                split();
+            } catch (Exception e)
+            {
+                exceptionCount++;
+                out.println("Unknown Exception on file: " + currentFile);
+                e.printStackTrace();
+                out.println("============/nIGNORED/n============");
+            }
+        }
+        out.println("=========/n=========/n  REPORT/n=========/n=========/n "
+                + "Total Okays: " + count
+                + "Excpetions: " + exceptionCount
+                + "Good Infobox: " + goodInfoboxCount
+                + "Bad Infobox: " + badInfoboxCount
+                + "Content: " + contentCount
+                + "Redirects: " + redirectCount
+        );
+    }
+
+    public static void split() throws FileNotFoundException, IOException
     {
         final String REDIRECT = "#REDIRECT",
                 INFOBOX = "infobox\\",
@@ -37,28 +83,17 @@ public class Splitter {
                 SEPERATOR = " ::: ",
                 INFOBOX_OPEN = "{{Infobox"; //Except this the rest are Path to files
         final int MAX_CHAR_PER_FILE = 67108000; //actually +800
-        int start, end;
-
-        Scanner r = new Scanner(System.in);
-        PrintWriter out = new PrintWriter(new File("OutputLogger.log"));
-        //BufferedWriter output;
-
-        System.out.println("Enter Start file name: ");
-        start = r.nextInt();
-        System.out.println("Enter End file name: ");
-        end = r.nextInt();
 
         BufferedReader file;
         String fileName = "";
         int infoboxChars = 0,
                 redirectChars = 0,
-                contentChars = 0,
-                count = 0;
-        BufferedWriter redirectWriter = new BufferedWriter(new FileWriter(REDIRECTS + start, true)),
-                infoboxWriter = new BufferedWriter(new FileWriter(INFOBOX + start)),
-                 contentWriter = new BufferedWriter(new FileWriter(CONTENT + start));
-        
-        for (int currentFile = start; currentFile <= end; currentFile++)
+                contentChars = 0;
+        BufferedWriter redirectWriter = new BufferedWriter(new FileWriter(REDIRECTS + currentFile, true)),
+                infoboxWriter = new BufferedWriter(new FileWriter(INFOBOX + currentFile)),
+                contentWriter = new BufferedWriter(new FileWriter(CONTENT + currentFile));
+
+        for (; currentFile <= end; currentFile++)
         {
             try
             {
@@ -67,7 +102,7 @@ public class Splitter {
             } catch (Exception e)
             {
                 //out.println("NOT FOUND: " + fileName);
-               // e.printStackTrace();
+                // e.printStackTrace();
                 continue;
             }
 
@@ -81,6 +116,7 @@ public class Splitter {
 
             if (contentLine.substring(0, 9).equals(REDIRECT))
             {
+                redirectCount++;
                 //It is a redirect File
                 //public FileWriter(File file,boolean append)throws IOException
                 String targetName = contentLine.substring(
@@ -91,13 +127,13 @@ public class Splitter {
                 {
                     redirectWriter.close();
                     redirectWriter = new BufferedWriter(new FileWriter(REDIRECTS + currentFile, true));
-                    redirectChars=0;
+                    redirectChars = 0;
                 }
 
                 try
                 {
-                    redirectWriter.write(idLine+SEPERATOR+targetName + '\n');
-                    redirectChars+=idLine.length()+2;
+                    redirectWriter.write(idLine + SEPERATOR + targetName + '\n');
+                    redirectChars += idLine.length() + 2;
                 } catch (Exception e)
                 {
                     e.printStackTrace();
@@ -117,21 +153,21 @@ public class Splitter {
                     if (lastInfoboxEnd == -1)
                     {
                         out.println("CRITICAL ERROR!! Malformed Infobox Brackets\nArticle: " + currentFile + " Infobox Start: " + infoboxStart);
-                       // out.println("---Skipped Article---");
+                        // out.println("---Skipped Article---");
                         continue;
                     }
                     //Store infobox in seperate folder
-                    if (infoboxChars + (lastInfoboxEnd-infoboxStart+idLine.length()) >= MAX_CHAR_PER_FILE)
+                    if (infoboxChars + (lastInfoboxEnd - infoboxStart + idLine.length()) >= MAX_CHAR_PER_FILE)
                     {
                         infoboxWriter.close();
                         infoboxWriter = new BufferedWriter(new FileWriter(INFOBOX + currentFile, true));
-                        infoboxChars=0;
+                        infoboxChars = 0;
                     }
                     try
                     {
                         infoboxWriter.write(idLine + SEPERATOR);
                         infoboxWriter.write(contentLine.substring(infoboxStart, lastInfoboxEnd) + '\n');
-                        infoboxChars+=lastInfoboxEnd-infoboxStart+idLine.length();
+                        infoboxChars += lastInfoboxEnd - infoboxStart + idLine.length();
                     } catch (Exception e)
                     {
                         e.printStackTrace();
@@ -141,11 +177,11 @@ public class Splitter {
                 }
 
                 //Store Content
-                if (contentChars + (contentLine.length()-(lastInfoboxEnd-infoboxStart)+idLine.length()) >= MAX_CHAR_PER_FILE)
+                if (contentChars + (contentLine.length() - (lastInfoboxEnd - infoboxStart) + idLine.length()) >= MAX_CHAR_PER_FILE)
                 {
-                        contentWriter.close();
-                        contentWriter = new BufferedWriter(new FileWriter(CONTENT + currentFile, true));
-                        contentChars=0;
+                    contentWriter.close();
+                    contentWriter = new BufferedWriter(new FileWriter(CONTENT + currentFile, true));
+                    contentChars = 0;
                 }
                 try
                 {
@@ -155,7 +191,7 @@ public class Splitter {
                      Omit the 1st substring part cause it mostly contains Disambiguations
                      */
                     contentWriter.write(contentLine.substring(lastInfoboxEnd, contentLine.length()) + '\n');
-                    contentChars+=(contentLine.length()-(lastInfoboxEnd-infoboxStart)+idLine.length());
+                    contentChars += (contentLine.length() - (lastInfoboxEnd - infoboxStart) + idLine.length());
                 } catch (Exception e)
                 {
                     e.printStackTrace();
@@ -165,9 +201,9 @@ public class Splitter {
             }
             //out.println("OK  " + currentFile);
             count++;
-            if(count%5==0)
+            if (count % 1000 == 0)
             {
-                System.out.println(count+" Files Done. Now at: "+currentFile);
+                System.out.println(count + " Files Done. Now at: " + currentFile);
             }
         }
     }

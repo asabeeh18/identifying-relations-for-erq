@@ -1,5 +1,3 @@
-// cc MaxTemperatureMapper Mapper for maximum temperature example
-// vv MaxTemperatureMapper
 import java.io.IOException;
 
 import org.apache.hadoop.fs.Path;
