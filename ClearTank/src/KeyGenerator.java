@@ -1,33 +1,35 @@
 import java.io.IOException;
-
-import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.io.LongWritable;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Mapper;
-import org.apache.hadoop.mapreduce.lib.input.FileSplit;
-import org.apache.lucene.search.SearcherLifetimeManager;
 
+
+/**
+ * Fast DBpedia INFOBOX version
+ * @author Ahmed
+ */
 public class KeyGenerator extends Mapper<LongWritable, Text, Node, Text> {
 
 	DataReader dataReader=new DataReader();
     static ProjNLP predicateExtractor=new ProjNLP();
-    static SearcherL=new SearcherL();
-	@Override
+    static SearcherL sL=new SearcherL();
+
+    @Override
 	public void map(LongWritable key, Text value, Context context) throws IOException, InterruptedException 
     {
-	
-		Node[] node=dataReader.readInfobox();
-        for(Node n: node)
+        Node formal=Cleaner.clean(value.toString());
+        String sentences[]=sL.getHighlightedResult(formal.subject+" "+formal.object);
+        String predicates[]=new String[sentences.length];
+        int i=0;
+        for(String sentence:sentences)
         {
-            LuceneSearch.search(n);
+            predicates[i]=predicateExtractor.getPred(new Node(formal.subject,sentence,formal.object));
+            context.write(new Node(formal.subject,null,formal.object), new Text(predicates[i]));
+            i++;
             
-            predicateExtractor.getPred(new Node(n.subject,,n.object));
         }
-		while(node!=null)
-		{
-			context.write(node, filePath);
-			node=dataReader.readInfobox();
-		}
+        
+        
 	}
 }
 // ^^ MaxTemperatureMapper

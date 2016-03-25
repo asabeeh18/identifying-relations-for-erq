@@ -26,16 +26,22 @@ import org.apache.lucene.search.highlight.TokenSources;
 class SearcherL {
 
     LuceneHighlighter luceneHighlighter;
-    public static String INDEX_DIRECTORY="PATH/to/dir";
+    public static String INDEX_DIRECTORY = "H:\\DBpedia DataSet\\Stage1_Articles\\index_content_5";
     public static final String FIELD_CONTENT = "Content";
     public static final String FIELD_PATH = "Path";
     private Searcher searcher;
     QueryParser queryParser;
 
-    public SearcherL() throws Exception
+    public SearcherL()
     {
         luceneHighlighter = new LuceneHighlighter();
-        searcher = new Searcher(INDEX_DIRECTORY);
+        try
+        {
+            searcher = new Searcher(INDEX_DIRECTORY);
+        } catch (Exception e)
+        {
+            e.printStackTrace();
+        }
         queryParser = new QueryParser(FIELD_CONTENT, new StandardAnalyzer());
     }
 
@@ -49,7 +55,7 @@ class SearcherL {
             // STEP A
             Query query = queryParser.parse(searchQuery);
             QueryScorer queryScorer = new QueryScorer(query, FIELD_CONTENT);
-            Fragmenter fragmenter = new SimpleSpanFragmenter(queryScorer);
+            Fragmenter fragmenter = new SimpleSpanFragmenter(queryScorer,3000);
 
             Highlighter highlighter = new Highlighter(queryScorer); // Set the best scorer fragments
             highlighter.setMaxDocCharsToAnalyze(100000);
@@ -120,10 +126,11 @@ class SearcherL {
 
         System.out.println("Search Query: ");
 
-        String s[]=sl.getHighlightedResult(r.nextLine());
-        for(String s1 : s)
+        String s[] = sl.getHighlightedResult(r.nextLine());
+        for (String s1 : s)
         {
             System.out.println(s1);
         }
     }
+
 }

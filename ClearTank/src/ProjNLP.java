@@ -43,17 +43,17 @@ public class ProjNLP {
 
     }
 
-    public static void getData(Scanner scr)
+    public static void getData(Node node)
     {
-        subject = scr.nextLine();
-        str = scr.nextLine();
-        object = scr.nextLine();
+        subject = node.subject;
+        str = node.predicate;
+        object = node.object;
     }
 
     public String getPred(Node node)
     {
 
-        getData(new Scanner(System.in));
+        getData(node);
 
         sentSet = sentDet.sentDetect(str);
         numSent = sentSet.length;
