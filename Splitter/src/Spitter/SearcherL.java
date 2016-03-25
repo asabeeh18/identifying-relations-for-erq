@@ -26,7 +26,7 @@ import org.apache.lucene.search.highlight.TokenSources;
 class SearcherL {
 
     LuceneHighlighter luceneHighlighter;
-    public static String INDEX_DIRECTORY = "H:\\DBpedia DataSet\\Stage1_Articles\\index_content_5";
+    public static String INDEX_DIRECTORY = "H:\\DBpedia DataSet\\index_long-abstracts_en.ttl";
     public static final String FIELD_CONTENT = "Content";
     public static final String FIELD_PATH = "Path";
     private Searcher searcher;
@@ -55,10 +55,10 @@ class SearcherL {
             // STEP A
             Query query = queryParser.parse(searchQuery);
             QueryScorer queryScorer = new QueryScorer(query, FIELD_CONTENT);
-            Fragmenter fragmenter = new SimpleSpanFragmenter(queryScorer,3000);
+            Fragmenter fragmenter = new SimpleSpanFragmenter(queryScorer, 300);
 
             Highlighter highlighter = new Highlighter(queryScorer); // Set the best scorer fragments
-            highlighter.setMaxDocCharsToAnalyze(100000);
+            //highlighter.setMaxDocCharsToAnalyze(100000);
             highlighter.setTextFragmenter(fragmenter); // Set fragment to highlight
 
             // STEP B

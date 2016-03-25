@@ -90,6 +90,7 @@ public class ProjNLP {
                     break;
                 }
             }
+            predicate+=" ";
         }
 
         return predicate;

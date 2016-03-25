@@ -14,6 +14,7 @@ public class MapTester{
 
 	DataReader dataReader=new DataReader();
     static ProjNLP predicateExtractor=new ProjNLP();
+    //static PredExt predicateExtractor=new PredExt();
     static SearcherL sL=new SearcherL();
     static BufferedWriter context;
     
@@ -26,7 +27,7 @@ public class MapTester{
         for(String sentence:sentences)
         {
             predicates[i]=predicateExtractor.getPred(new Node(formal.subject,sentence,formal.object));
-            context.write(formal.subject+" "+formal.object+"    " +predicates[i]+"..."+sentence+"\n");
+            context.write(formal.subject+"    "+formal.object+"    " +predicates[i]+"..."+sentence+"\n");
             i++;
             
         }
