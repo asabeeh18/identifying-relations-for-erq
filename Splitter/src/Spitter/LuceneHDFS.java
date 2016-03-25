@@ -51,16 +51,16 @@ public class LuceneHDFS {
     /**
      * @param args the command line arguments
      */
-    public static final String INDEX_DIRECTORY = "H:\\Stage1_Subset\\Partaa\\Index";
-    public static final String FILES_DIRECTORY = "H:\\Stage1_Subset\\Partaa\\IndexTrial";
+    public static final String INDEX_DIRECTORY = "H:\\DBpedia DataSet\\Stage1_Articles\\0 to 14L\\index_1_1";
+    public static final String FILES_DIRECTORY = "H:\\DBpedia DataSet\\Stage1_Articles\\0 to 14L\\content_1";
     public static final String FIELD_CONTENT = "Content";
     public static final String FIELD_PATH = "Path";
 
     public static void main(String[] args) throws LockObtainFailedException, IOException, ParseException, org.apache.lucene.queryparser.classic.ParseException
     {
-        // createIndex();
+        //createIndex();
+        searchIndex1("+abraham");
         //searchIndex1("+fat");
-        searchIndex1("+fat");
 
     }
 
@@ -133,28 +133,42 @@ public class LuceneHDFS {
             Terms tv = ir.getTermVector(scoreDoc.doc, "SS");
             TermsEnum terms = tv.iterator();
 
-            while (terms.next() != null)
+            int id = scoreDoc.doc;
+            Document doc = indexSearcher.doc(id);
+            //Fields termVectors = ir.getTermVectors(id);
+            Terms termVector = ir.getTermVector(id, "SS");
+            boolean hasPos = termVector.hasPositions();
+            if (hasPos)
             {
-                p = terms.postings(p, PostingsEnum.ALL);
-
-                while (p.nextDoc() != PostingsEnum.NO_MORE_DOCS)
-                {
-                    int freq = p.freq();
-                    for (int i = 0; i < freq; i++)
-                    {
-                        int pos = p.nextPosition();   // Always returns -1!!!
-                        System.out.println("Pos: " + pos + "DOC: " + p.docID());
-
-                    //BytesRef data = p.getPayload();
-                        //doStuff(freq, pos, data); // Fails miserably, of course.
-                    }
-                    //System.out.println("====FOR====" + p.attributes());
-                }
-                //System.out.println("x==x==WHILE==x==x");
+                PostingsEnum pos = null;
+                TermsEnum iterator1 = termVector.iterator();
+                pos = iterator1.postings(p, PostingsEnum.POSITIONS);
+                int p2 = pos.nextPosition();
+                System.out.println(p2 + "");
             }
-            System.out.println("---");
+
+//            while (terms.next() != null)
+//            {
+//                p = terms.postings(p, PostingsEnum.ALL);
+//
+//                while (p.nextDoc() != PostingsEnum.NO_MORE_DOCS)
+//                {
+//                    int freq = p.freq();
+//                    for (int i = 0; i < freq; i++)
+//                    {
+//                        int pos = p.nextPosition();   // Always returns -1!!!
+//                        System.out.println("Pos: " + pos + "DOC: " + p.docID());
+//
+//                    //BytesRef data = p.getPayload();
+//                        //doStuff(freq, pos, data); // Fails miserably, of course.
+//                    }
+//                    //System.out.println("====FOR====" + p.attributes());
+//                }
+//                //System.out.println("x==x==WHILE==x==x");
+//            }
+//            System.out.println("---");
         }
-        
+
     }
 
     public static void searchIndex(String searchString) throws IOException, ParseException, org.apache.lucene.queryparser.classic.ParseException

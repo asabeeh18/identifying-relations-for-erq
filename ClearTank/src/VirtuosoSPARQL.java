@@ -68,6 +68,7 @@ class VirtuosoSPARQL {
             RDFNode s = rs.get("s");
             RDFNode p = rs.get("p");
             RDFNode o = rs.get("o");
+            
             System.out.println(" { " + s + " " + p + " " + o + " . }");
         }
     }

@@ -10,7 +10,7 @@ public class Node implements WritableComparable<Node> {
        String object;
        String predicate;
 
-    public Node(String s,String o,String p)
+    public Node(String s,String p,String o)
     {
         subject=s;
         predicate=p;

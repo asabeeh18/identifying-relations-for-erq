@@ -1,8 +1,8 @@
 package Spitter;
 
-
 import static Spitter.SampleIndex.FIELD_CONTENT;
 import static Spitter.SampleIndex.FIELD_PATH;
+import java.io.BufferedReader;
 import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.analysis.standard.StandardAnalyzer;
 import org.apache.lucene.document.Document;
@@ -14,6 +14,9 @@ import org.apache.lucene.store.Directory;
 import org.apache.lucene.store.FSDirectory;
 
 import java.io.File;
+import java.io.FileReader;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.Scanner;
 
 import org.apache.lucene.index.DirectoryReader;
@@ -37,14 +40,17 @@ import org.apache.lucene.search.highlight.TokenSources;
 class HighlightedIndex {
 
     LuceneHighlighter luceneHighlighter;
-    
+    public static String INDEX_DIRECTORY;
+    public static String FILES_DIRECTORY;
+
     public class Indexer {
 
         private IndexWriter indexWriter;
-        public static final String INDEX_DIRECTORY = "H:\\Stage1_Subset\\Partaa\\Index";
-        public static final String FILES_DIRECTORY = "H:\\Stage1_Subset\\Partaa\\Stage1_Articles";
+        //public static final String INDEX_DIRECTORY = "H:\\DBpedia DataSet\\Stage1_Articles\\0 to 14L\\index_1";
+        //public static final String FILES_DIRECTORY = "H:\\DBpedia DataSet\\Stage1_Articles\\0 to 14L\\content_1";
         public static final String FIELD_CONTENT = "Content";
         public static final String FIELD_PATH = "Path";
+
         public Indexer(String indexerDirectoryPath) throws Exception
         {
             Analyzer analyzer = new StandardAnalyzer();
@@ -65,15 +71,23 @@ class HighlightedIndex {
             int i = 0;
             for (File file : files)
             {
-                Document document = new Document();
+                
                 String path = file.getCanonicalPath();
-                document.add(new StringField(FIELD_PATH, path, Field.Store.YES));
 
-                String content = new Scanner(file).useDelimiter("\\Z").next();
-                document.add(new TextField(FIELD_CONTENT, content,Field.Store.YES));
+                BufferedReader line = new BufferedReader(new FileReader(file));
+                String content;
+                while ((content = line.readLine()) != null)
+                {
+                    Document document = new Document();
+                    document.add(new TextField(FIELD_CONTENT, content, Field.Store.YES));
+                    document.add(new StringField(FIELD_PATH, path, Field.Store.YES));
+                    indexWriter.addDocument(document);
+                    System.out.println("Current count: " + i + " File " + file.getName());
+                    i++;
+                    
+                }
 
-                indexWriter.addDocument(document);
-                i++;
+                //String content = new String(Files.readAllBytes(Paths.get(path)));
                 System.out.println("Current count: " + i + " File " + file.getName());
             }
             indexWriter.commit();
@@ -88,12 +102,12 @@ class HighlightedIndex {
 
     public class LuceneHighlighter {
 
-        private static final String INDEX_DIRECTORY_PATH = "H:\\Stage1_Subset\\Partaa\\Index";
+        //private static final String INDEX_DIRECTORY = "H:\\Stage1_Subset\\Partaa\\Index";
         private static final int MAX_DOC = 10;
 
         public void createIndex() throws Exception
         {
-            Indexer indexer = new Indexer(INDEX_DIRECTORY_PATH);
+            Indexer indexer = new Indexer(INDEX_DIRECTORY);
             Integer maxDoc = indexer.createIndex(); // Returns total documents indexed
             System.out.println("Index Created, total documents indexed: " + maxDoc);
             indexer.close(); // Close index writer
@@ -103,17 +117,17 @@ class HighlightedIndex {
         public void searchIndex(String searchQuery) throws Exception
         {
 
-            searcher = new Searcher(INDEX_DIRECTORY_PATH);
+            searcher = new Searcher(INDEX_DIRECTORY);
             Analyzer analyzer = new StandardAnalyzer();
             QueryParser queryParser = new QueryParser(FIELD_CONTENT, analyzer);
             Query query = queryParser.parse(searchQuery);
 
             TopDocs topDocs = searcher.search(query, MAX_DOC);
             ScoreDoc scoreDocs[] = topDocs.scoreDocs;
-            
-            PackedTokenAttributeImpl po=new PackedTokenAttributeImpl();
-            int off=po.startOffset();
-            System.out.println(off+"");
+
+            PackedTokenAttributeImpl po = new PackedTokenAttributeImpl();
+            int off = po.startOffset();
+            System.out.println(off + "");
             for (ScoreDoc scoreDoc : scoreDocs)
             {
                 Document document = searcher.getDocument(scoreDoc.doc);
@@ -124,34 +138,34 @@ class HighlightedIndex {
 
         public void searchAndHighLightKeywords(String searchQuery) throws Exception
         {
-            searcher = new Searcher(INDEX_DIRECTORY_PATH);
+            searcher = new Searcher(INDEX_DIRECTORY);
             // STEP A
             QueryParser queryParser = new QueryParser(FIELD_CONTENT, new StandardAnalyzer());
             Query query = queryParser.parse(searchQuery);
             QueryScorer queryScorer = new QueryScorer(query, FIELD_CONTENT);
             Fragmenter fragmenter = new SimpleSpanFragmenter(queryScorer);
-            
+
             Highlighter highlighter = new Highlighter(queryScorer); // Set the best scorer fragments
-            highlighter.setMaxDocCharsToAnalyze(1000*Highlighter.DEFAULT_MAX_CHARS_TO_ANALYZE);
+            highlighter.setMaxDocCharsToAnalyze(100000);
             highlighter.setTextFragmenter(fragmenter); // Set fragment to highlight
 
             // STEP B
-            File indexFile = new File(INDEX_DIRECTORY_PATH);
+            File indexFile = new File(INDEX_DIRECTORY);
             Directory directory = FSDirectory.open(indexFile.toPath());
             IndexReader indexReader = DirectoryReader.open(directory);
 
             // STEP C
-            System.out.println("query: "+ query);
+            System.out.println("query: " + query);
             ScoreDoc scoreDocs[] = searcher.search(query, MAX_DOC).scoreDocs;
             for (ScoreDoc scoreDoc : scoreDocs)
             {
-                System.out.println("1");
+                //System.out.println("1");
                 Document document = searcher.getDocument(scoreDoc.doc);
                 String title = document.get(FIELD_CONTENT);
                 TokenStream tokenStream = TokenSources.getAnyTokenStream(indexReader,
                         scoreDoc.doc, FIELD_CONTENT, document, new StandardAnalyzer());
                 String fragment = highlighter.getBestFragment(tokenStream, title);
-                System.out.println(fragment+"/n-------"+title);
+                System.out.println(fragment + "-------");
             }
         }
     }
@@ -189,23 +203,41 @@ class HighlightedIndex {
 
     public void runner() throws Exception
     {
-        String searchQuery = "Islamic AND revolution";
-        searchIndex(searchQuery);
-       // 
+        Scanner r = new Scanner(System.in);
+        System.out.println("Index Directory path: ");
+        INDEX_DIRECTORY = r.nextLine();
+        System.out.println("Files Directory path: ");
+        FILES_DIRECTORY = r.nextLine();
+        System.out.println("1. Create index 2. Search");
+
+        switch (r.nextInt())
+        {
+            case 1:
+                createIndex();
+                break;
+            case 2:
+                System.out.println("Search Query: ");
+                r.nextLine();
+                searchIndex(r.nextLine());
+        }
+       // String searchQuery = "Islamic AND revolution";
+
+        //searchIndex(searchQuery);
         //luceneHighlighter.searchIndex(searchQuery); // without highlight functionality
-        
     }
 
     public HighlightedIndex()
     {
         luceneHighlighter = new LuceneHighlighter();
     }
+
     void createIndex() throws Exception
     {
         luceneHighlighter.createIndex();
     }
+
     void searchIndex(String searchQuery) throws Exception
     {
-        luceneHighlighter.searchIndex(searchQuery);
+        luceneHighlighter.searchAndHighLightKeywords(searchQuery);
     }
 }

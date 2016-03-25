@@ -30,7 +30,7 @@ public class RelationHandling {
     job.setReducerClass(Relationships.class);
     //job.setNumReduceTasks(1);
 	System.out.println("25");
-     
+    
     System.exit(job.waitForCompletion(true) ? 0 : 1);
     System.out.println("Exit JOB");
   }
