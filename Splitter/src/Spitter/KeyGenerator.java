@@ -19,19 +19,17 @@ public class KeyGenerator extends Mapper<LongWritable, Text, Node, Text> {
     @Override
 	public void map(LongWritable key, Text value, Context context) throws IOException, InterruptedException 
     {
-        Node formal=Cleaner.clean(value.toString());
-        String sentences[]=sL.getHighlightedResult(formal.subject+" "+formal.object);
-        String predicates[]=new String[sentences.length];
+        Node formal = Cleaner.clean(value.toString());
+        String sentences[] = sL.getHighlightedResult("+" + formal.subject + " AND " + "+" + formal.object);
+        String predicates[] = new String[sentences.length];
+        
         int i=0;
+        //generate predicates
         for(String sentence:sentences)
         {
             predicates[i]=predicateExtractor.getPred(new Node(formal.subject,sentence,formal.object));
-            context.write(new Node(formal.subject,null,formal.object), new Text(predicates[i]));
+            context.write(new Node(formal.subject,formal.predicate,formal.object), new Text(predicates[i]));
             i++;
-            
-        }
-        
-        
+        }       
 	}
 }
-// ^^ MaxTemperatureMapper

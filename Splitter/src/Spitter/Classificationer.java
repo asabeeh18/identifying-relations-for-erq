@@ -3,26 +3,15 @@ package Spitter;
 
 import org.apache.hadoop.io.Text;
 
-import com.hp.hpl.jena.query.*;
+
 import com.hp.hpl.jena.rdf.model.RDFNode;
 
-import virtuoso.jena.driver.*;
+
 
 class Classificationer {
 
 	private static final int MAX_DEPTH = 7;
-	String url = "jdbc:virtuoso://localhost:1111";
-	VirtGraph connection;
-	VirtuosoUpdateRequest vur;
-	Classificationer()
-	{
-		connection = new VirtGraph(url, "dba", "dba");
-	}
-	void runQuery(String query)
-	{
-        vur = VirtuosoUpdateFactory.create(query, connection);
-        vur.exec();
-	}
+	
 	void classify(Node start,Iterable<Text> predicates)
 	{
 		toDbpedia(start);

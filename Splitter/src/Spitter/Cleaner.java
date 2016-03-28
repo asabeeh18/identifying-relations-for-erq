@@ -51,8 +51,8 @@ class Cleaner {
     {
         int start=url.lastIndexOf('/');
         if(start==-1)
-            return url;
-        return url.substring(start+1, url.length()-1);
+            return stripSpecialChars(url);
+        return stripSpecialChars(url.substring(start+1, url.length()-1));
     }
     private static String clearIfValue(String string)
     {
@@ -80,5 +80,14 @@ class Cleaner {
             }
         }
         return count;
+    }
+    public static String stripSpecialChars(String special)
+    {
+        return special.replaceAll("[^A-Za-z0-9 ._]", "");
+    }
+    
+    public static void main(String args[])
+    {
+        clean("<http://dbpedia.org/resource/American_National_Standards_Institute> <http://xmlns.com/foaf/0.1/homepage> <http://www.ansi.org/> .");
     }
 }

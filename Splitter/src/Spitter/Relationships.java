@@ -1,39 +1,43 @@
 package Spitter;
 
-
 import org.apache.hadoop.io.Text;
 import com.hp.hpl.jena.query.*;
 import com.hp.hpl.jena.rdf.model.RDFNode;
 import java.io.IOException;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.Set;
 import org.apache.hadoop.mapreduce.Reducer;
-
-import virtuoso.jena.driver.*;
 
 /**
  * ***
  * The custom category graph has tuples in form of
- * <subject> <rank>^^<predicate> <object>
+ *
  * Ex: Will need to use regex when querying.... think of a better option :(
  *
  */
 class Relationships extends Reducer<Node, Text, Text, Text> {
 
     private static final int MAX_DEPTH = 7;
-    String url = "jdbc:virtuoso://localhost:1111";
-    VirtGraph connection;
-    VirtuosoUpdateRequest vur;
     static Set<RDFNode> edges = new HashSet<>();
+    
+    static Set<String> objCategory;
+    
     Node key;
     ResultSet objects;
-    
-    Relationships()
-    {
-        connection = new VirtGraph(url, "dba", "dba");
-    }
+    Virtuoso virt=new Virtuoso();
 
-    void classify(Iterable<Text> predicates)
+    @Override
+    public void reduce(Node key, Iterable<Text> values, Context context) throws IOException, InterruptedException
+    {
+//        System.out.println("Reducer: " + key);
+        this.key = key;
+        objCategory = virt.getSet(virt.runQuery("SELECT ?o FROM <categories> WHERE { " + key.object + " ?p ?o }"));
+        classify(values);
+        context.write(new Text(key.predicate), predicateLine(key, values));
+        
+    }
+void classify(Iterable<Text> predicates)
     {
         ResultSet results = runQuery("SELECT ?o FROM <categories> WHERE { " + key.subject + " ?p ?o }");
         while (results.hasNext())
@@ -41,6 +45,32 @@ class Relationships extends Reducer<Node, Text, Text, Text> {
             QuerySolution rs = results.nextSolution();
             RDFNode o = rs.get("o");
             dfs(o, 0);
+        }
+    }
+    void classify(Iterable<Text> predicates)
+    {
+        /**
+         * Do. 
+         * 
+         * equal: return and store start and final edge
+         * not: store intermediate edge,add next categories in queue
+         * 
+         */
+        Set<String> results = virt.getSet(virt.runQuery("SELECT ?o FROM <categories> WHERE { " + key.subject + " ?p ?o }"));
+        Iterator<String> iter=results.iterator();
+        while (iter.hasNext())
+        {
+            String s=iter.next();
+            if(objCategory.add(s))
+            {
+                objCategory.remove(s);
+            }
+            else
+            {
+                return ;
+            }
+            //write to text file
+            String edge = key.subject+","+key.predicate+","+"";
         }
     }
 
@@ -67,7 +97,7 @@ class Relationships extends Reducer<Node, Text, Text, Text> {
         {
             return path;
         }
-        
+
         ResultSet results = runQuery("SELECT ?o FROM <category.categories> WHERE { " + begin + " ?p ?o }");
         while (results.hasNext())
         {
@@ -82,12 +112,12 @@ class Relationships extends Reducer<Node, Text, Text, Text> {
             if (pathExists)
             {
                 /*
-                    ASK if edge already exists If yes increment the rank.
+                 ASK if edge already exists If yes increment the rank.
                     
-                */
-          //      ASK {<http://dbpedia.org/resource/Arthur_Laurents> <http://purl.org/dc/terms/subject> <http://dbpedia.org/resource/Categaory:United_States_Army_personnel>};
+                 */
+                //      ASK {<http://dbpedia.org/resource/Arthur_Laurents> <http://purl.org/dc/terms/subject> <http://dbpedia.org/resource/Categaory:United_States_Army_personnel>};
                 boolean res = runAsk("ASK{<> <> <> }");
-                if(res)
+                if (res)
                 {
                     //update rank of predicate
                 }
@@ -97,32 +127,7 @@ class Relationships extends Reducer<Node, Text, Text, Text> {
         return path;
     }
 
-    @Override
-    public void reduce(Node key, Iterable<Text> values, Context context) throws IOException, InterruptedException
-    {
-
-        System.out.println("Reducer: " + key);
-        this.key = key;
-        objects=runQuery(key.object);
-        classify(values);
-        context.write(new Text(key.predicate), predicateLine(key, values));
-    }
-
-    boolean runAsk(String query)
-    {
-        Query sparql = QueryFactory.create(query);
-        VirtuosoQueryExecution vqe = VirtuosoQueryExecutionFactory.create(sparql, connection);
-
-        return vqe.execAsk();
-    }
-    ResultSet runQuery(String query)
-    {
-        Query sparql = QueryFactory.create(query);
-        VirtuosoQueryExecution vqe = VirtuosoQueryExecutionFactory.create(sparql, connection);
-
-        return vqe.execSelect();
-    }
-
+    
     void toDbpedia(Node convert)
     {
         convert.subject = "http://dbpedia.org/resource/" + convert.subject;
@@ -173,7 +178,6 @@ class Relationships extends Reducer<Node, Text, Text, Text> {
 //
 //		boolean res = vqe.execAsk();
 //                System.out.println("\nASK results: "+res);
-
 //
 //        System.out.println("\nexecute: DELETE FROM GRAPH <http://test1> { <aa> <bb> 'cc' }");
 //        str = "DELETE FROM GRAPH <http://test1> { <aa> <bb> 'cc' }";
@@ -200,7 +204,7 @@ class Relationships extends Reducer<Node, Text, Text, Text> {
         {
             QuerySolution rs = objects.nextSolution();
             RDFNode o = rs.get("o");
-            if(o.equals(results))
+            if (o.equals(results))
             {
                 return true;
             }

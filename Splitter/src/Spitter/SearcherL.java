@@ -67,7 +67,7 @@ class SearcherL {
             IndexReader indexReader = DirectoryReader.open(directory);
 
             // STEP C
-            System.out.println("query: " + query);
+            //System.out.println("query: " + query);
             ScoreDoc scoreDocs[] = searcher.search(query, MAX_DOC).scoreDocs;
             String[] sentence = new String[scoreDocs.length];
             int i = 0;
@@ -111,9 +111,17 @@ class SearcherL {
         }
     }
 
-    public String[] getHighlightedResult(String query) throws Exception
+    public String[] getHighlightedResult(String query)
     {
-        return luceneHighlighter.searchAndHighLightKeywords(query);
+        try{
+            return luceneHighlighter.searchAndHighLightKeywords(query);
+        }
+        catch(Exception e)
+        {
+            e.printStackTrace();
+        }
+        return null;
+        
     }
 
     public static void main(String[] args) throws Exception

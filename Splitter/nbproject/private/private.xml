@@ -5,8 +5,13 @@
         <group>
             <file>file:/H:/NBProject/identifying-relations-for-erq/Splitter/src/Splitter.java</file>
             <file>file:/H:/NBProject/identifying-relations-for-erq/Splitter/src/Spitter/IndexerL.java</file>
+            <file>file:/H:/NBProject/identifying-relations-for-erq/Splitter/src/Spitter/Cleaner.java</file>
+            <file>file:/H:/NBProject/identifying-relations-for-erq/Splitter/src/Spitter/Virtuoso.java</file>
+            <file>file:/H:/NBProject/identifying-relations-for-erq/Splitter/src/Spitter/ProjNLP.java</file>
             <file>file:/H:/NBProject/identifying-relations-for-erq/Splitter/src/Spitter/SearcherL.java</file>
-            <file>file:/H:/NBProject/identifying-relations-for-erq/Splitter/src/Spitter/MapTester.java</file>
+            <file>file:/H:/NBProject/identifying-relations-for-erq/Splitter/src/Spitter/Relationships.java</file>
+            <file>file:/H:/NBProject/identifying-relations-for-erq/Splitter/src/Spitter/Node.java</file>
+            <file>file:/H:/NBProject/identifying-relations-for-erq/Splitter/src/Spitter/RelationHandling.java</file>
         </group>
     </open-files>
 </project-private>
