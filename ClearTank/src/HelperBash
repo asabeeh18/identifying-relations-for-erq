@@ -1,0 +1,2 @@
+FOr hadoop class dependencies
+ for i in $(ls);do echo "job.addArchiveToClassPath(new Path(\"/libs/$i\"));"; done

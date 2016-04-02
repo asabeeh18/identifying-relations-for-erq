@@ -86,11 +86,11 @@ public class ProjNLP {
             {
                 if (predTags[j].equals(tags[i]))
                 {
-                    predicate += tokens[i];
+                    predicate += tokens[i]+",";
                     break;
                 }
             }
-            predicate+=" ";
+            
         }
 
         return predicate;

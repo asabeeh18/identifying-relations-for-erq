@@ -16,7 +16,6 @@ public class RelationHandling {
       System.err.println("Usage: Intersector <input path> <output path>");
       System.exit(-1);
     }
-    
 	System.out.println("16");
     
     Job job = Job.getInstance();
@@ -29,7 +28,7 @@ public class RelationHandling {
     NLineInputFormat.setNumLinesPerSplit(job,2);
     //job.setNumReduceTasks(0);
     job.setMapperClass(KeyGenerator.class);
-    job.setReducerClass(Relationships.class);
+    //job.setReducerClass(Relationships.class);
     //job.setNumReduceTasks(1);
 	System.out.println("25");
     
