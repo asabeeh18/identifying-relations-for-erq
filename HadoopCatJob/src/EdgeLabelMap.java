@@ -29,37 +29,70 @@ public class EdgeLabelMap extends Mapper<LongWritable, Text, NullWritable, Text>
     @Override
     public void map(LongWritable key, Text value, Context context) throws IOException, InterruptedException
     {
-//        try
-//        {
-//            System.out.println("Map Entered");
-//            output = new Text();
-//            this.context = context;
-//            node = Cleaner.seperate(value.toString());
-//            if (node != null)
-//            {
-//                Set<String> subC = virt.getSet(virt.runQuery(articleProblemGenerator(node.subject)));
-//                System.out.println("Subject Categories");
-//                objC = virt.getSet(virt.runQuery(articleProblemGenerator(node.object)));
-//
-//                System.out.println("Object Categories");
-//                if (objC != null && subC != null && objC.size() > 0)
-//                {
-//                    classify(subC);
-//                }
-//                if (output != null)
-//                {
-//                    context.write(NullWritable.get(), output);
-//                }
-//            } else
-//            {
-//                System.out.println("Trashed");
-//
-//            }
-//            System.out.println("Mapper Done");
-//        } catch (Exception e)
-//        {
-//            System.out.println("MAPPER GENERATED EXCEPTION: " + value);
-//        }
+
+        try
+        {
+            System.out.println("Map Entered");
+            output = new Text();
+            this.context = context;
+            node = Cleaner.seperate(value.toString());
+            if (node != null)
+            {
+                Set<String> subC = virt.getSet(virt.runQuery(articleProblemGenerator(node.subject)));
+                System.out.println("Subject Categories");
+                objC = virt.getSet(virt.runQuery(articleProblemGenerator(node.object)));
+
+                System.out.println("Object Categories");
+                if (objC != null && subC != null && objC.size() > 0)
+                {
+                    classify(subC);
+                }
+                if (output != null)
+                {
+                    context.write(NullWritable.get(), output);
+                }
+            } else
+            {
+                System.out.println("Trashed");
+
+            }
+            System.out.println("Mapper Done");
+        } catch (Exception e)
+        {
+            System.out.println("MAPPER GENERATED EXCEPTION: " + value);
+        }
+
+        try
+        {
+            System.out.println("Map Entered");
+            output = new Text();
+            this.context = context;
+            node = Cleaner.seperate(value.toString());
+            if (node != null)
+            {
+                Set<String> subC = virt.getSet(virt.runQuery(articleProblemGenerator(node.subject)));
+                System.out.println("Subject Categories");
+                objC = virt.getSet(virt.runQuery(articleProblemGenerator(node.object)));
+
+                System.out.println("Object Categories");
+                if (objC != null && subC != null && objC.size() > 0)
+                {
+                    classify(subC);
+                }
+                if (output != null)
+                {
+                    context.write(NullWritable.get(), output);
+                }
+            } else
+            {
+                System.out.println("Trashed");
+
+            }
+            System.out.println("Mapper Done");
+        } catch (Exception e)
+        {
+            System.out.println("MAPPER GENERATED EXCEPTION: " + value);
+        }
     }
 
     void classify(Set<String> subC) throws IOException, InterruptedException
