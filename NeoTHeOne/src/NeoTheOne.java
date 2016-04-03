@@ -18,7 +18,7 @@ import org.neo4j.graphdb.factory.GraphDatabaseFactory;
 public class NeoTheOne {
 
     GraphDatabaseService db;
-    private final String DB_PATH = "/home/vulcan/Documents/test.db";
+    private final String DB_PATH = "/home/vulcan/Documents/test1.db";
 
     public NeoTheOne() {
         if (db == null) {
@@ -26,7 +26,12 @@ public class NeoTheOne {
             db = new GraphDatabaseFactory().newEmbeddedDatabase(DB_PATH);
             registerShutdownHook(db);
         }
+        try{
         uniqueNode();
+        }
+        catch(Exception e){
+            e.printStackTrace();
+        }
     }
 
     /**
