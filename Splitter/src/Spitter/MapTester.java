@@ -24,6 +24,7 @@ public class MapTester {
         Node formal = Cleaner.clean(value.toString());
         String sentences[] = sL.getHighlightedResult("+" + formal.subject + " AND " + "+" + formal.object);
         String predicates[] = new String[sentences.length];
+        //TODO: Remove the for loop 
         int i = 0;
         for (String sentence : sentences)
         {

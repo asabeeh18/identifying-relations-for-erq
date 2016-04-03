@@ -32,4 +32,3 @@ public class KeyGenerator extends Mapper<LongWritable, Text, Node, Text> {
         
 	}
 }
-// ^^ MaxTemperatureMapper

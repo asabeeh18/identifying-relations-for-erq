@@ -8,9 +8,9 @@ import org.apache.hadoop.io.WritableComparable;
 
 public class Node implements WritableComparable<Node> {
        // Some data
-       String subject;
-       String object;
-       String predicate;
+       public String subject;
+       public String object;
+       public String predicate;
 
     public Node(String s,String p,String o)
     {
