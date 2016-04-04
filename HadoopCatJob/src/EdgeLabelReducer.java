@@ -10,7 +10,7 @@ import org.apache.hadoop.mapreduce.Reducer;
  * Ex: Will need to use regex when querying.... think of a better option :(
  *
  */
-class EdgeLabelReducer extends Reducer<NullWritable, Text, NullWritable, Text> {
+class EdgeLabelReducer extends Reducer<NullWritable, Text, Text, Text> {
 
     @Override
     public void reduce(NullWritable val, Iterable<Text> values, Context context) throws IOException, InterruptedException
@@ -18,7 +18,8 @@ class EdgeLabelReducer extends Reducer<NullWritable, Text, NullWritable, Text> {
 
         for (Text value : values)
         {
-            context.write(NullWritable.get(), value);
+            System.out.println("4: "+ value);
+            context.write(new Text("4"), value);
         }
 
     }

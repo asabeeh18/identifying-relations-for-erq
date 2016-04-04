@@ -40,38 +40,43 @@ public class Virtuoso {
         catch(Exception e)
         {
             System.out.println("Query Killed: "+query);
+            e.printStackTrace();
             return null;
         }
-        return vqe.execSelect();
+        ResultSet execSelect = vqe.execSelect();
+        return execSelect;
     }
 
     public Set<String> getSet(ResultSet result)
     {
+        System.out.println("Getset: "+result);
         if(result==null)
             return null;
         Set<String> node = new HashSet<>();
         while (result.hasNext())
         {
-            QuerySolution rs = result.nextSolution();
+            QuerySolution res = result.nextSolution();
+            System.out.println("Getset.while: "+res);
+            QuerySolution rs = res;
             node.add(rs.get("o").toString());
         }
         return node;
     }
 
-    Node getResult(ResultSet results)
+    void getResult(ResultSet results)
     {
         if (results.hasNext())
         {
             QuerySolution rs = results.nextSolution();
-            RDFNode s = rs.get("s");
-            RDFNode p = rs.get("p");
+            //RDFNode s = rs.get("s");
+            //RDFNode p = rs.get("p");
             RDFNode o = rs.get("o");
-            RDFNode j = rs.get("j");
+            //RDFNode j = rs.get("j");
             
-            System.out.println(" { " + s + " " + p + " " + o + " " + j + " . }");
-            return new Node(s.toString(), p.toString(), o.toString());
+            System.out.println(" { "  + o + " . }");
+            //return new Node(s.toString(),o.toString());
         }
-        return null;
+        
     }
 
     public boolean runAsk(String query)
@@ -84,7 +89,8 @@ public class Virtuoso {
     public static void main(String args[])
     {
         Virtuoso virt = new Virtuoso();
-        Set<String> res=virt.getSet(virt.runQuery("SELECT ?o WHERE { <http://dbpedia.org/resource/Algorithms> ?p ?o}"));
+        Set<String> res=virt.getSet(virt.runQuery("SELECT ?o FROM <article.catategories> WHERE { <http://dbpedia.org/resource/Beavis_and_Butt-head> ?p ?o}"));
+        virt.getResult(virt.runQuery("SELECT ?o FROM <article.catategories> WHERE { <http://dbpedia.org/resource/Beavis_and_Butt-head> ?p ?o}"));
         System.out.println(res);
     }
 }
