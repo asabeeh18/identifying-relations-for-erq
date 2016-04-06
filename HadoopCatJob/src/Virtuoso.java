@@ -32,14 +32,14 @@ public class Virtuoso {
      */
     public ResultSet runQuery(String query)
     {
-        System.out.println("Query Recieved: "+query);
+        //System.out.println("Query Recieved: "+query);
         try{
         Query sparql = QueryFactory.create(query);
         vqe = VirtuosoQueryExecutionFactory.create(sparql, connection);
         }
         catch(Exception e)
         {
-            System.out.println("Query Killed: "+query);
+            System.out.println("Query Killed");
             e.printStackTrace();
             return null;
         }
@@ -49,14 +49,14 @@ public class Virtuoso {
 
     public Set<String> getSet(ResultSet result)
     {
-        System.out.println("Getset: "+result);
+        //System.out.println("Getset: "+result);
         if(result==null)
             return null;
         Set<String> node = new HashSet<>();
         while (result.hasNext())
         {
             QuerySolution res = result.nextSolution();
-            System.out.println("Getset.while: "+res);
+            //System.out.println("Getset.while: "+res);
             QuerySolution rs = res;
             node.add(rs.get("o").toString());
         }
@@ -73,7 +73,7 @@ public class Virtuoso {
             RDFNode o = rs.get("o");
             //RDFNode j = rs.get("j");
             
-            System.out.println(" { "  + o + " . }");
+            //System.out.println(" { "  + o + " . }");
             //return new Node(s.toString(),o.toString());
         }
         
