@@ -1,6 +1,7 @@
 
 import org.apache.hadoop.io.Text;
 import java.io.IOException;
+import org.apache.hadoop.io.LongWritable;
 import org.apache.hadoop.io.NullWritable;
 import org.apache.hadoop.mapreduce.Reducer;
 /**
@@ -10,16 +11,15 @@ import org.apache.hadoop.mapreduce.Reducer;
  * Ex: Will need to use regex when querying.... think of a better option :(
  *
  */
-class EdgeLabelReducer extends Reducer<NullWritable, Text, Text, Text> {
+class EdgeLabelReducer extends Reducer<LongWritable, Text, NullWritable, Text> {
 
     @Override
-    public void reduce(NullWritable val, Iterable<Text> values, Context context) throws IOException, InterruptedException
+    public void reduce(LongWritable val, Iterable<Text> values, Context context) throws IOException, InterruptedException
     {
 
         for (Text value : values)
         {
-            System.out.println("4: "+ value);
-            context.write(new Text("4"), value);
+            context.write(NullWritable.get(), value);
         }
 
     }

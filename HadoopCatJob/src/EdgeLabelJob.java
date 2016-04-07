@@ -2,6 +2,7 @@
 // cc MaxTemperature Application to find the maximum temperature in the weather dataset
 // vv MaxTemperature
 import org.apache.hadoop.fs.Path;
+import org.apache.hadoop.io.LongWritable;
 import org.apache.hadoop.io.NullWritable;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.lib.input.NLineInputFormat;
@@ -82,16 +83,15 @@ public class EdgeLabelJob {
 //        job.addArchiveToClassPath(new Path("/libs/virtjdbc4.jar"));
         job.addArchiveToClassPath(new Path("/libs/xercesImpl.jar"));
 
-        job.setMapOutputKeyClass(Text.class);
+        job.setMapOutputKeyClass(LongWritable.class);
         job.setMapOutputValueClass(Text.class);
         
         FileInputFormat.addInputPath(job, new Path(args[0]));
         FileOutputFormat.setOutputPath(job, new Path(args[1]));
-        //NLineInputFormat.setNumLinesPerSplit(job, 2);
-        //job.setNumReduceTasks(0);
+        
         job.setMapperClass(EdgeLabelMap.class);
-        //job.setReducerClass(Relationships.class);
-        //job.setNumReduceTasks(1);
+        job.setReducerClass(EdgeLabelReducer.class);
+        
 
         System.exit(job.waitForCompletion(true) ? 0 : 1);
         System.out.println("Exit JOB");

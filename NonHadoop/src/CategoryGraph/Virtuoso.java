@@ -1,4 +1,4 @@
-
+package CategoryGraph;
 
 import com.hp.hpl.jena.query.Query;
 import com.hp.hpl.jena.query.QueryFactory;
@@ -15,7 +15,7 @@ import virtuoso.jena.driver.VirtuosoUpdateRequest;
 public class Virtuoso {
 
     private static final int MAX_DEPTH = 7;
-    private static final String url = "jdbc:virtuoso://master:1111";
+    private static final String url = "jdbc:virtuoso://localhost:1111";
     VirtGraph connection;
     VirtuosoUpdateRequest vur;
     VirtuosoQueryExecution vqe;

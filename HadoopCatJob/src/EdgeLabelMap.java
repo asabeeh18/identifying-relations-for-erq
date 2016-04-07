@@ -14,7 +14,7 @@ import org.apache.hadoop.mapreduce.Mapper;
  *
  * @author Ahmed
  */
-public class EdgeLabelMap extends Mapper<LongWritable, Text, Text, Text> {
+public class EdgeLabelMap extends Mapper<LongWritable, Text, LongWritable, Text> {
 
     private static final int MAX_DEPTH = 15;
 
@@ -23,7 +23,7 @@ public class EdgeLabelMap extends Mapper<LongWritable, Text, Text, Text> {
     static Set<String> duplicateCheck = new HashSet<>();
     Context context;
     Node node;
-    String output="";
+    Text output=new Text();
     String out="";
 
     @Override
@@ -41,38 +41,28 @@ public class EdgeLabelMap extends Mapper<LongWritable, Text, Text, Text> {
                 
                 Set<String> subC = virt.getSet(virt.runQuery(articleProblemGenerator(node.subject)));
                 objC = virt.getSet(virt.runQuery(articleProblemGenerator(node.object)));
-                System.out.println("Query Ran:");
                 
                 if (objC != null && subC != null && objC.size() > 0)
                 {
-                    System.out.println("Calling classify: "+output);
+                    System.out.println("Calling classify: ");
                     classify(subC);
                 }
-                else
-                {
-                 System.out.println("Samples:"+output+","+objC+","+subC);
-                }
+                
                 if (output != null)
                 {
-                    System.out.println("non null op: "+output);
-                    System.out.println("====line 52: "+output);
-                    context.write(new Text("4"), new Text(output));
+                    context.write(key, new Text(output));
                 }
-            } else
-            {
-                System.out.println("Trashed");
-
             }
-            System.out.println("Mapper Done");
+            
         } catch (Exception e)
         {
-            System.out.println("MAPPER GENERATED EXCEPTION: " + value);
+            System.out.println("MAPPER GENERATED EXCEPTION: ");
         }
+        System.out.println("Mapper Done");
     }
 
     void classify(Set<String> subC) throws IOException, InterruptedException
     {
-        System.out.println("In classify: "+output);
         Iterator<String> result = subC.iterator();
         while (result.hasNext())
         {
@@ -83,16 +73,16 @@ public class EdgeLabelMap extends Mapper<LongWritable, Text, Text, Text> {
             {
                 //context.write(null, new Text(node.subject + "," + node.predicate + "," + curNode + "\n"));
                 out = node.subject + "," + node.predicate + "," + curNode + "\n";
-                output+=out;
+                output.append(out.getBytes(StandardCharsets.UTF_8), 0, out.length());
+                System.out.println("Written: ");
             }
 
-            System.out.println("line 82: "+output);
         }
     }
 
     boolean dfs(String begin, int depth) throws IOException, InterruptedException
     {
-        output+="DFS: "+begin+"\n";
+        
         boolean path = false;
 
         if (hasPath(begin))
@@ -125,8 +115,8 @@ public class EdgeLabelMap extends Mapper<LongWritable, Text, Text, Text> {
                 //Assuming duplicate edges wont exist
                 //context.write(null, new Text(begin + "," + node.predicate + "," + rs + "\n"));
                 out = begin + "," + node.predicate + "," + rs + "\n";
-                output+=out;
-                System.out.println("Written: " + begin + "," + node.predicate + "," + rs);
+                output.append(out.getBytes(StandardCharsets.UTF_8), 0, out.length());
+                System.out.println("Written: ");
             }
             path = pathExists | path;
         }
@@ -142,10 +132,10 @@ public class EdgeLabelMap extends Mapper<LongWritable, Text, Text, Text> {
             String curNode = objIter.next();
             if (curNode.equals(result))
             {
-                //context.write(null, new Text(curNode + "," + node.predicate + "," + node.object + "\n"));
-                out = curNode + "," + node.predicate + "," + node.object + "\n";
-                //output.append(out.getBytes(StandardCharsets.UTF_8), 0, out.length());
                 
+                out = curNode + "," + node.predicate + "," + node.object + "\n";
+                output.append(out.getBytes(StandardCharsets.UTF_8), 0, out.length());
+                System.out.println("Written: ");
                 return true;
             }
         }
@@ -155,14 +145,14 @@ public class EdgeLabelMap extends Mapper<LongWritable, Text, Text, Text> {
     private String articleProblemGenerator(String subject)
     {
         //Watch out for the typo it's intentional
-        String s = "SELECT ?o FROM <article.catategories> WHERE {" + subject + " ?p ?o}";
+        String s = "SELECT ?o FROM <http://article.cat> WHERE {" + subject + " ?p ?o}";
         //System.out.println(s);
         return s;
     }
 
     private String categoriesProblemGenerator(String subject)
     {
-        String s = "SELECT ?o FROM <categories.categories> WHERE {" + subject + " ?p ?o}";
+        String s = "SELECT ?o FROM <http://category.cat> WHERE {" + subject + " ?p ?o}";
         //System.out.println(s);
         return s;
     }
