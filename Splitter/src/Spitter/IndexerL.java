@@ -26,8 +26,9 @@ class IndexerL {
     public class Indexer {
 
         private IndexWriter indexWriter;
-        public static final String FIELD_CONTENT = "Content";
-        public static final String FIELD_PATH = "Path";
+        public static final String FIELD_CONTENT = "Content",
+                FIELD_TITLE = "Title",
+                FIELD_ID="Id";
 
         public Indexer(String indexerDirectoryPath) throws Exception
         {
@@ -46,19 +47,24 @@ class IndexerL {
             File dir = new File(FILES_DIRECTORY);
             File[] files = dir.listFiles();
             System.out.println("Total Count: " + files.length);
-            int i = 0;
+            int i = 0,start,end;
             for (File file : files)
             {
                 
-                String path = file.getCanonicalPath();
-
+                //String path = file.getCanonicalPath();
+                
                 BufferedReader line = new BufferedReader(new FileReader(file));
                 String content;
                 while ((content = line.readLine()) != null)
                 {
+                    end=content.indexOf(":::");
+                    start=content.indexOf(',');
+                    String title=content.substring(start+1,end).trim();
+                    String id=content.substring(0,start);
                     Document document = new Document();
                     document.add(new TextField(FIELD_CONTENT, content, Field.Store.YES));
-                    document.add(new StringField(FIELD_PATH, path, Field.Store.YES));
+                    document.add(new StringField(FIELD_TITLE, title, Field.Store.YES));
+                    document.add(new StringField(FIELD_ID, id, Field.Store.YES));
                     indexWriter.addDocument(document);
                     System.out.println("Current count: " + i + " File " + file.getName());
                     i++;                  

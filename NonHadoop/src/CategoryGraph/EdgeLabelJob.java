@@ -1,6 +1,5 @@
 package CategoryGraph;
 
-import com.sun.prism.shader.FillCircle_ImagePattern_AlphaTest_Loader;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
