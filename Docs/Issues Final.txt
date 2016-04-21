@@ -1,0 +1,47 @@
+TO DO:
+Implementation Activities [Task assigned]
+Test Cases [Take examples of SRK and MSD. Put expected output]
+6.1 Graphical user interface [Ready]
+6.2 Test cases [As mentioned above]
+Conclusion and Future Scope [Task assigned]
+APPENDIX C: Input and Output for Test Cases
+
+Ahmed's To-Do:
+01) Edit GUI image to accomodate for arrows (user manual section) and describe how to open it.
+02) Implementation activities: [--Check the formatting(Numbering gave me some issues) and stuff--]
+	* Extract relevant text/sentences from Wikipedia using knowledge base
+	* Uploading data to Neo4j as a graph for the purpose of querying [A]
+	* Generate categories of subjects [A]
+	* Using the Neo4j graph, match the generated categories [A]
+	* Search using the most weighted predicate in the Wiki page of that subject [A]
+
+Dhruv's To-Do:
+01) Implementation activities:
+	* Talk to sir and ask if we should put the expected o/p even though the system doesn't work [DONE]
+	* Extract predicates from the sentences [DONE]
+	* Accept user query in structured form (subject, predicate, object-category) [DONE]
+	* Collection of predicates with categorical data [DONE]
+	* Assign weights to phrases/predicates (the number of duplicate occurences are weights) [DONE]
+02) Repair the user manual section using the edited image from Sabeeh
+03) Add the MSD example as part of the "Need" section [DONE]
+
+Tembe's To-Do:
+01) PROPERLY IMPLEMENT THE INSTRUCTIONS OF THE "Type setting, text processing and printing" section of the rules document
+02) Change line spacing for pages after the index to 1.5
+03) Write the "Conclusion and Future Scope section" after confirming with Vanwari
+04) Add page numbers the index
+05) Add to the test cases section (refer to the top of this document)
+
+FLOW OF THE PROJECT:
+Pre-Processing Phase
+* Extract relevant text/sentences from Wikipedia using knowledge base [A]
+* Extract predicates from the sentences [D]
+* Collection of predicates with categorical data [D]
+* Uploading data to Neo4j as a graph for the purpose of querying [A]
+* Assign weights to phrases/predicates [D]
+
+Real-Time Phase
+* Accept user query in structured form (subject, predicate, object-category) [D]
+* Generate categories of subjects [A]
+* Using the Neo4j graph, match the generated categories [A]
+* Search using the most weighted predicate in the Wiki page of that subject [A]

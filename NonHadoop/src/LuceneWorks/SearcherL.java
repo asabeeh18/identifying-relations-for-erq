@@ -26,7 +26,7 @@ import org.apache.lucene.search.highlight.TokenSources;
 class SearcherL {
 
     LuceneHighlighter luceneHighlighter;
-    public static String INDEX_DIRECTORY;
+    public static String INDEX_DIRECTORY="H:\\DBpedia DataSet\\Stage1_Articles\\index_content_5";
     public static final String FIELD_CONTENT = "Content";
     public static final String FIELD_PATH = "Title";
     private Searcher searcher;
@@ -56,9 +56,9 @@ class SearcherL {
             Query query = queryParser.parse(searchQuery);
             QueryScorer queryScorer = new QueryScorer(query, FIELD_CONTENT);
             Fragmenter fragmenter = new SimpleSpanFragmenter(queryScorer, 300);
-
+//
             Highlighter highlighter = new Highlighter(queryScorer); // Set the best scorer fragments
-            //highlighter.setMaxDocCharsToAnalyze(100000);
+//            //highlighter.setMaxDocCharsToAnalyze(100000);
             highlighter.setTextFragmenter(fragmenter); // Set fragment to highlight
 
             // STEP B
@@ -85,6 +85,7 @@ class SearcherL {
             }
             return sentence;
         }
+        
     }
 
     public class Searcher {
@@ -128,8 +129,8 @@ class SearcherL {
     {
 
         Scanner r = new Scanner(System.in);
-        System.out.println("Index Directory path: ");
-        String INDEX_DIRECTORY = r.nextLine();
+        //System.out.println("Index Directory path: ");
+        //INDEX_DIRECTORY = r.nextLine();
         SearcherL sl = new SearcherL();
 
         System.out.println("Search Query: ");

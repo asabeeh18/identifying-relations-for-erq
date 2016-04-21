@@ -21,7 +21,7 @@ import org.neo4j.graphdb.factory.GraphDatabaseFactory;
 public class Neo4j {
 
     GraphDatabaseService graphDb;
-    final String DB_PATH = "";
+    final String DB_PATH = "H:\\graph.db";
 
     private static void registerShutdownHook(final GraphDatabaseService graphDb)
     {

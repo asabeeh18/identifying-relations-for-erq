@@ -13,7 +13,7 @@ public class ProjNLP {
     static SentenceDetectorME sentDet;
     static POSTaggerME tagger;
     static Tokenizer tokenizer;
-    static String subject, str, object, predicate;
+    static String subject, str, object, predicate, cd = "CD";
     static String[] sentSet, tokens, tags;
     static final String[] predTags = new String[]
     {
@@ -69,10 +69,14 @@ public class ProjNLP {
         for (int i = 0; i < tokens.length; i++)
         {
             if (tokens[i].equals(subject))
-            subPos = i;
+            {
+                subPos = i;
+            }
 
             if (tokens[i].equals(object))
-            objPos = i;
+            {
+                objPos = i;
+            }
         }
 
         int j;
@@ -80,16 +84,32 @@ public class ProjNLP {
 
         for (int i = 0; i < tokens.length; i++)
         {
+            predicate += tokens[i] + " ";
+
             for (j = 0; j < predTags.length; j++)
             {
                 if (predTags[j].equals(tags[i]))
                 {
-                    predicate += tokens[i];
+                    if (tags[i].equals(cd))
+                    {
+                        predicate = predicate.substring(0, predicate.length() - tokens[i].length());
+                        predicate += "[[CD]] ";
+                    } else
+                    {
+                        predicate += "[[" + predTags[j] + "]] ";
+                    }
+
                     break;
                 }
             }
         }
 
+        predicate.trim();
         return predicate;
+    }
+    public static void main(String ar[])
+    {
+        ProjNLP pn=new ProjNLP();
+        pn.
     }
 }

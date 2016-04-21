@@ -61,11 +61,13 @@ class IndexerL {
                     start=content.indexOf(',');
                     String title=content.substring(start+1,end).trim();
                     String id=content.substring(0,start);
+                    
                     Document document = new Document();
                     document.add(new TextField(FIELD_CONTENT, content, Field.Store.YES));
                     document.add(new StringField(FIELD_TITLE, title, Field.Store.YES));
                     document.add(new StringField(FIELD_ID, id, Field.Store.YES));
                     indexWriter.addDocument(document);
+                    
                     System.out.println("Current count: " + i + " File " + file.getName());
                     i++;                  
                 }

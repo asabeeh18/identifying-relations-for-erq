@@ -28,7 +28,7 @@ class InfoboxMine {
         if (o.indexOf(DATA) != -1 || o.indexOf(ENGLISH) != -1)
         {
             start = o.indexOf('"');
-            end = o.indexOf('"');
+            end = o.indexOf('"', start+1);
             object = o.substring(start, end + 1);
         } else if (o.indexOf(PROPER) != -1)
         {
@@ -41,9 +41,15 @@ class InfoboxMine {
             System.out.println("Critical Error!!!\n tuple: " + tuple);
             return null;
         }
+        subject=spacer(subject);
+        object=spacer(object);
+        
         return new Node(subject, predicate, object);
     }
-
+    static String spacer(String s)
+    {
+        return s.replace('_', ' ');
+    }
     public static void main(String ar[])
     {
         System.out.println(perfectCut("<http://dbpedia.org/resource/Anarchism> <http://www.w3.org/2000/01/rdf-schema#seeAlso> <http://dbpedia.org/resource/Education> "));
