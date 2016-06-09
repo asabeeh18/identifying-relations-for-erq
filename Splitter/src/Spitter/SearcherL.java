@@ -129,7 +129,7 @@ class SearcherL {
 
         Scanner r = new Scanner(System.in);
         System.out.println("Index Directory path: ");
-        String INDEX_DIRECTORY = r.nextLine();
+        INDEX_DIRECTORY = r.nextLine();
         SearcherL sl = new SearcherL();
 
         System.out.println("Search Query: ");
