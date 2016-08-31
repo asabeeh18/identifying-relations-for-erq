@@ -15,6 +15,7 @@ import org.apache.lucene.search.Query;
 import org.apache.lucene.search.TopDocs;
 
 import org.apache.lucene.analysis.TokenStream;
+import org.apache.lucene.queryparser.classic.MultiFieldQueryParser;
 import org.apache.lucene.queryparser.classic.QueryParser;
 import org.apache.lucene.search.ScoreDoc;
 import org.apache.lucene.search.highlight.Fragmenter;
@@ -26,23 +27,24 @@ import org.apache.lucene.search.highlight.TokenSources;
 class SearcherL {
 
     LuceneHighlighter luceneHighlighter;
-    public static String INDEX_DIRECTORY = "H:\\DBpedia DataSet\\index_long-abstracts_en.ttl";
-    public static final String FIELD_CONTENT = "Content";
-    public static final String FIELD_PATH = "Path";
+    
     private Searcher searcher;
-    QueryParser queryParser;
-
+    //QueryParser queryParser;
+    MultiFieldQueryParser queryParser;
     public SearcherL()
     {
         luceneHighlighter = new LuceneHighlighter();
         try
         {
-            searcher = new Searcher(INDEX_DIRECTORY);
+            searcher = new Searcher(LuceneConstants.INDEX_DIRECTORY);
         } catch (Exception e)
         {
             e.printStackTrace();
         }
-        queryParser = new QueryParser(FIELD_CONTENT, new StandardAnalyzer());
+        //queryParser = new QueryParser(LuceneConstants.FIELD_CONTENT, new StandardAnalyzer());
+         queryParser = new MultiFieldQueryParser(
+                                        new String[] {LuceneConstants.FIELD_TITLE},
+                                        new StandardAnalyzer());
     }
 
     public class LuceneHighlighter {
@@ -54,32 +56,33 @@ class SearcherL {
 
             // STEP A
             Query query = queryParser.parse(searchQuery);
-            QueryScorer queryScorer = new QueryScorer(query, FIELD_CONTENT);
+            ScoreDoc scoreDocs[] = searcher.search(query, MAX_DOC).scoreDocs;
+            String[] sentence = new String[scoreDocs.length];
+            
+            QueryScorer queryScorer = new QueryScorer(query, LuceneConstants.FIELD_CONTENT);
             Fragmenter fragmenter = new SimpleSpanFragmenter(queryScorer, 300);
-
             Highlighter highlighter = new Highlighter(queryScorer); // Set the best scorer fragments
             //highlighter.setMaxDocCharsToAnalyze(100000);
             highlighter.setTextFragmenter(fragmenter); // Set fragment to highlight
 
             // STEP B
-            File indexFile = new File(INDEX_DIRECTORY);
+            File indexFile = new File(LuceneConstants.INDEX_DIRECTORY);
             Directory directory = FSDirectory.open(indexFile.toPath());
             IndexReader indexReader = DirectoryReader.open(directory);
 
             // STEP C
             //System.out.println("query: " + query);
-            ScoreDoc scoreDocs[] = searcher.search(query, MAX_DOC).scoreDocs;
-            String[] sentence = new String[scoreDocs.length];
+            
             int i = 0;
             for (ScoreDoc scoreDoc : scoreDocs)
             {
                 //System.out.println("1");
                 Document document = searcher.getDocument(scoreDoc.doc);
-                String title = document.get(FIELD_CONTENT);
+                String title = document.get(LuceneConstants.FIELD_CONTENT);
                 TokenStream tokenStream = TokenSources.getAnyTokenStream(indexReader,
-                        scoreDoc.doc, FIELD_CONTENT, document, new StandardAnalyzer());
+                        scoreDoc.doc, LuceneConstants.FIELD_CONTENT, document, new StandardAnalyzer());
                 sentence[i] = highlighter.getBestFragment(tokenStream, title);
-                //System.out.println(fragment + "-------");
+                System.out.println(title + "-------");
                 //=fragment;
                 i++;
             }
@@ -126,15 +129,22 @@ class SearcherL {
 
     public static void main(String[] args) throws Exception
     {
-
+        
         Scanner r = new Scanner(System.in);
-        System.out.println("Index Directory path: ");
-        INDEX_DIRECTORY = r.nextLine();
+        
         SearcherL sl = new SearcherL();
 
         System.out.println("Search Query: ");
-
-        String s[] = sl.getHighlightedResult(r.nextLine());
+/***
+ *  The way it works... no results still , Use luke to look into the index ...luke build connect
+             java.net.SocketException: Socket closed deymo..   :'/ They won't come out no matter what
+             * Done
+    using core to look in lucene index, errors lo and behold!
+ */        
+        
+        String s[] = sl.getHighlightedResult(LuceneConstants.FIELD_TITLE + ":Abraham_Lincoln" + " AND "+LuceneConstants.FIELD_CONTENT+":Member of the Illinois House of Representatives");//+LuceneConstants.FIELD_CONTENT+"");
+        
+        
         for (String s1 : s)
         {
             System.out.println(s1);

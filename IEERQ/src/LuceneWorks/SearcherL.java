@@ -26,8 +26,9 @@ import org.apache.lucene.search.highlight.TokenSources;
 class SearcherL {
 
     LuceneHighlighter luceneHighlighter;
-    public static String INDEX_DIRECTORY="H:\\DBpedia DataSet\\Stage1_Articles\\index_content_5";
-    public static final String FIELD_CONTENT = "Content";
+    public static String INDEX_DIRECTORY="H:\\DBpedia DataSet\\Stage1_Articles\\14to70L\\index_content";
+    public static final String FIELD_TITLE = "Title",
+                                FIELD_CONTENT = "Content";
     public static final String FIELD_PATH = "Title";
     private Searcher searcher;
     QueryParser queryParser;
@@ -54,7 +55,7 @@ class SearcherL {
 
             // STEP A
             Query query = queryParser.parse(searchQuery);
-            QueryScorer queryScorer = new QueryScorer(query, FIELD_CONTENT);
+            QueryScorer queryScorer = new QueryScorer(query, FIELD_TITLE);
             Fragmenter fragmenter = new SimpleSpanFragmenter(queryScorer, 300);
 //
             Highlighter highlighter = new Highlighter(queryScorer); // Set the best scorer fragments
@@ -76,10 +77,13 @@ class SearcherL {
                 //System.out.println("1");
                 Document document = searcher.getDocument(scoreDoc.doc);
                 String title = document.get(FIELD_CONTENT);
-                TokenStream tokenStream = TokenSources.getAnyTokenStream(indexReader,
-                        scoreDoc.doc, FIELD_CONTENT, document, new StandardAnalyzer());
+                
+                /*
+                TokenStream tokenStream = TokenSources.getAnyTokenStream(indexReader,scoreDoc.doc, FIELD_CONTENT, document, new StandardAnalyzer());
                 sentence[i] = highlighter.getBestFragment(tokenStream, title);
-                //System.out.println(fragment + "-------");
+                */
+                sentence[i] = highlighter.getBestFragment(new StandardAnalyzer(),FIELD_CONTENT,title);
+                System.out.println(title + "-------"+ sentence[i]);
                 //=fragment;
                 i++;
             }
