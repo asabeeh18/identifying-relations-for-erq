@@ -2,13 +2,13 @@ package LuceneWorks;
 
 import CategoryGraph.Node;
 
-class InfoboxMine {
+public class InfoboxMine {
 
     private static final String DATA = "http://www.w3.org/",
             PROPER = "http://dbpedia.org/resource/",
             ENGLISH = "@en";
 
-    static Node perfectCut(String tuple)
+    public static Node perfectCut(String tuple)
     {
         /*
          Assumes the tuple format of SPO (space seperated and each entity surrounded by <>) and S & P are always in PROPER format
@@ -41,7 +41,7 @@ class InfoboxMine {
             System.out.println("Critical Error!!!\n tuple: " + tuple);
             return null;
         }
-        subject=spacer(subject);
+        //subject=spacer(subject);
         object=spacer(object);
         
         return new Node(subject, predicate, object);

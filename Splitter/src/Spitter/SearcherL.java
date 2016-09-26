@@ -60,9 +60,9 @@ class SearcherL {
             String[] sentence = new String[scoreDocs.length];
             
             QueryScorer queryScorer = new QueryScorer(query, LuceneConstants.FIELD_CONTENT);
-            Fragmenter fragmenter = new SimpleSpanFragmenter(queryScorer, 300);
+            Fragmenter fragmenter = new SimpleSpanFragmenter(queryScorer, 500);
             Highlighter highlighter = new Highlighter(queryScorer); // Set the best scorer fragments
-            //highlighter.setMaxDocCharsToAnalyze(100000);
+            //highlighter.setMaxDocCharsToAnalyze(100);
             highlighter.setTextFragmenter(fragmenter); // Set fragment to highlight
 
             // STEP B
@@ -82,7 +82,7 @@ class SearcherL {
                 TokenStream tokenStream = TokenSources.getAnyTokenStream(indexReader,
                         scoreDoc.doc, LuceneConstants.FIELD_CONTENT, document, new StandardAnalyzer());
                 sentence[i] = highlighter.getBestFragment(tokenStream, title);
-                System.out.println(title + "-------");
+                System.out.println(sentence[i] + "-------");
                 //=fragment;
                 i++;
             }
@@ -142,7 +142,7 @@ class SearcherL {
     using core to look in lucene index, errors lo and behold!
  */        
         
-        String s[] = sl.getHighlightedResult(LuceneConstants.FIELD_TITLE + ":Abraham_Lincoln" + " AND "+LuceneConstants.FIELD_CONTENT+":Member of the Illinois House of Representatives");//+LuceneConstants.FIELD_CONTENT+"");
+        String s[] = sl.getHighlightedResult(LuceneConstants.FIELD_TITLE + ":Aristotle" + " AND Content:Golden AND Content:mean");//+LuceneConstants.FIELD_CONTENT+"");
         
         
         for (String s1 : s)

@@ -21,17 +21,22 @@ public class MapTester {
 
     public void map(int key, String value) throws IOException, Exception
     {
-        Node formal = Cleaner.clean(value.toString());
-        String sentences[] = sL.getHighlightedResult("+" + formal.subject + " AND " + "+" + formal.object);
-        String predicates[] = new String[sentences.length];
-        //TODO: Remove the for loop 
-        int i = 0;
+        Node formal = InfoboxMine.perfectCut(value.toString());
+        String searchQ = LuceneConstants.FIELD_TITLE + ":" + formal.subject + " AND Content:" + formal.object;
+        String sentences[] = sL.getHighlightedResult(searchQ);
         for (String sentence : sentences)
         {
-            predicates[i] = predicateExtractor.getPred(new Node(formal.subject, sentence, formal.object));
-            context.write(formal.subject + ", " + formal.predicate + ", " + formal.object + ", " + predicates[i] + "\n");
-            i++;
+            context.write(formal.subject + LuceneConstants.DELIMITER + formal.predicate + LuceneConstants.DELIMITER + formal.object + LuceneConstants.DELIMITER + sentence+"\r\n");
         }
+        /**
+         * String predicates[] = new String[sentences.length]; //TODO: Remove
+         * the for loop int i = 0; for (String sentence : sentences) {
+         * predicates[i] = predicateExtractor.getPred(new Node(formal.subject,
+         * sentence, formal.object)); context.write(formal.subject + ", " +
+         * formal.predicate + ", " + formal.object + ", " + predicates[i] +
+         * "\n"); i++; }
+        *
+         */
     }
 
     public static void main(String args[]) throws IOException, Exception

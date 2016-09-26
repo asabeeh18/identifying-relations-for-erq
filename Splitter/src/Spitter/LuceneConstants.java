@@ -6,5 +6,6 @@ class LuceneConstants {
             FILES_DIRECTORY = "H:\\DBpedia DataSet\\Stage1_Articles\\sample_content_5\\",//"/media/vulcan/Data Set/DBpedia DataSet/Stage1_Articles/sample_content_5/", 
             FIELD_CONTENT = "Content",
             FIELD_TITLE = "Title",
+            DELIMITER="!:",
             FIELD_ID = "Id";
 }

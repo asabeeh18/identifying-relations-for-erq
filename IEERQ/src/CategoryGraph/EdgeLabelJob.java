@@ -29,7 +29,7 @@ public class EdgeLabelJob {
             out=mapper.map(line);
             if(out!=null)
                 context.write(out);
-            context.flush();
+            System.out.println(out);
             i++;
         }
         context.close();
