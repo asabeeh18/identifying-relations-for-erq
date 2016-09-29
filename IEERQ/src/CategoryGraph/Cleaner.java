@@ -107,10 +107,10 @@ public class Cleaner {
         return special.replaceAll("[^A-Za-z0-9 ._]", "");
     }
     
-//    public static void main(String args[])
-//    {
-//        clean("<http://dbpedia.org/resource/American_National_Standards_Institute> <http://xmlns.com/foaf/0.1/homepage> <http://www.ansi.org/> .");
-//    }
+    public static void main(String args[])
+    {
+        System.out.println(clean("<http://dbpedia.org/resource/American_National_Standards_Institute> <http://xmlns.com/foaf/0.1/homepage> <http://www.ansi.org/> ."));
+    }
 
 //    private static boolean braceCheck(String string)
 //    {

@@ -1,4 +1,4 @@
-package Spitter;
+package working;
 
 class LuceneConstants {
 

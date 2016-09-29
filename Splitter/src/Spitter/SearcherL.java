@@ -1,11 +1,17 @@
+/* 
+Last Updated:27/09/16, store all search results in a file
+*/
+
 package Spitter;
 
+import java.io.BufferedReader;
 import org.apache.lucene.analysis.standard.StandardAnalyzer;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.store.Directory;
 import org.apache.lucene.store.FSDirectory;
 
 import java.io.File;
+import java.io.FileReader;
 import java.util.Scanner;
 
 import org.apache.lucene.index.DirectoryReader;
@@ -135,12 +141,7 @@ class SearcherL {
         SearcherL sl = new SearcherL();
 
         System.out.println("Search Query: ");
-/***
- *  The way it works... no results still , Use luke to look into the index ...luke build connect
-             java.net.SocketException: Socket closed deymo..   :'/ They won't come out no matter what
-             * Done
-    using core to look in lucene index, errors lo and behold!
- */        
+
         
         String s[] = sl.getHighlightedResult(LuceneConstants.FIELD_TITLE + ":Aristotle" + " AND Content:Golden AND Content:mean");//+LuceneConstants.FIELD_CONTENT+"");
         
@@ -150,5 +151,10 @@ class SearcherL {
             System.out.println(s1);
         }
     }
-
+    public static void infoboxSearcher()
+    {
+        String infobox="H:\\DBpedia DataSet\\mappingbased-properties_en[INFOBOX].ttl\\mappingbased-properties_en[INFOBOX].ttl";
+        //BufferedReader br = new BufferedReader(new FileReader(new File(infobox)));
+        
+    }
 }

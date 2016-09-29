@@ -1,4 +1,4 @@
-package Spitter;
+package working;
 public class InfoboxMine {
 
     private static final String DATA = "http://www.w3.org/",
