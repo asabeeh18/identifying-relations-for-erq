@@ -19,3 +19,6 @@
 /IEERQ/build/
 /Working/build/
 /Working/dist/
+/Splitter/keyValue.*
+/NeoTHeOne/lib/*
+/*/reverb.jar
