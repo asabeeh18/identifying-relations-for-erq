@@ -16,6 +16,8 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.util.Scanner;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.apache.lucene.document.Field;
 import org.apache.lucene.document.StringField;
@@ -55,24 +57,45 @@ class IndexerL {
                 
                 BufferedReader line = new BufferedReader(new FileReader(file));
                 String content;
+                String title;
+                String meta=null;
                 while ((content = line.readLine()) != null)
                 {
+                    String id;
                     try{
-                        end=content.indexOf(":::");
+                        //end=content.indexOf("!::!");
+                        String splitArr[]=content.split("!::!");
+                        content=splitArr[1];
+                        meta=splitArr[0];
+                        String pattern="\\(\\'.*\\'\\)";
+                        Pattern r = Pattern.compile(pattern);
+                        Matcher m = r.matcher(meta);
+                        String cont=m.group(0);
+                        int metaCur=0;
+                        while(Character.isDigit(cont.charAt(metaCur)))
+                            metaCur++;
+                        id=cont.substring(0, metaCur);
+                        if(cont.charAt(metaCur)==',') metaCur++;
+                        if(cont.charAt(metaCur)=='\'') metaCur++;
+                        start=metaCur;
+                        while(Character.isLetter(cont.charAt(metaCur)))
+                            metaCur++;    
+                        title=cont.substring(start, metaCur);
+                        //('25','Autism')
                     
-                    start=content.indexOf(',');
-                    String title=content.substring(start+1,end).trim();
-                    String id=content.substring(0,start);
-                    wastedWriter.write(title+"\n");
-                    Document document = new Document();
-                    document.add(new TextField(LuceneConstants.FIELD_CONTENT, content, Field.Store.YES));
-                    document.add(new TextField(LuceneConstants.FIELD_TITLE, title, Field.Store.YES));
-                    document.add(new StringField(LuceneConstants.FIELD_ID, id, Field.Store.YES));
-                    indexWriter.addDocument(document);
+                        wastedWriter.write(title+"\n");
+                        Document document = new Document();
+                        document.add(new TextField(LuceneConstants.FIELD_CONTENT, content, Field.Store.YES));
+                        document.add(new TextField(LuceneConstants.FIELD_TITLE, title, Field.Store.YES));
+                        document.add(new StringField(LuceneConstants.FIELD_ID, id, Field.Store.YES));
+                        indexWriter.addDocument(document);
+                    
                     }
                     catch(Exception e)
                     {
-                        System.out.println(content);
+                        System.out.println(meta);
+                        e.printStackTrace();
+                        return i;
                     }
                     System.out.println("Current count: " + i + " File: "+" " + file.getName());
                     i++;
@@ -114,7 +137,7 @@ class IndexerL {
 
     public void runner() throws Exception
     {
-        Scanner r = new Scanner(System.in);
+        //Scanner r = new Scanner(System.in);
         createIndex();
     }
     

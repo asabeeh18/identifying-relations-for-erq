@@ -136,7 +136,7 @@ class Search {
     public static void main(String[] args) throws Exception
     {
         
-        Scanner r = new Scanner(System.in);
+        //Scanner r = new Scanner(System.in);
         
         Search sl = new Search();
 

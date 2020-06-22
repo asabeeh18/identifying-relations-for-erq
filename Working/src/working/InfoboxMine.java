@@ -33,13 +33,14 @@ public class InfoboxMine {
             end = o.indexOf('>');
             start = o.lastIndexOf("/", end);
             object = o.substring(start + 1, end);
-        } else
+        } 
+        else
         {
             //System.out.println("Critical Error!!!\n tuple: " + tuple);
             return null;
         }
         //subject=spacer(subject);
-        object=spacer(object);
+        object=spacer(object).replace(':',' ');
         
         return new Node(subject, predicate, object);
     }
@@ -49,6 +50,6 @@ public class InfoboxMine {
     }
     public static void main(String ar[])
     {
-        System.out.println(perfectCut("<http://dbpedia.org/resource/American_National_Standards_Institute> <http://xmlns.com/foaf/0.1/homepage> <http://www.ansi.org/> ."));
+        System.out.println(perfectCut("<http://dbpedia.org/resource/Algeria> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2003/01/geo/wgs84_pos#SpatialThing>"));
     }
 }

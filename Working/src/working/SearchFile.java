@@ -35,14 +35,18 @@ import org.apache.lucene.search.highlight.TokenSources;
 
 class SearchFile {
 
+    IndexReader indexReader;
     LuceneHighlighter luceneHighlighter;
 
     private Searcher searcher;
     //QueryParser queryParser;
     MultiFieldQueryParser queryParser;
 
-    public SearchFile()
+    public SearchFile() throws IOException
     {
+        File indexFile = new File(LuceneConstants.INDEX_DIRECTORY);
+        Directory directory = FSDirectory.open(indexFile.toPath());
+        indexReader = DirectoryReader.open(directory);
         luceneHighlighter = new LuceneHighlighter();
         try
         {
@@ -62,7 +66,7 @@ class SearchFile {
 
     void errorPrinter(Exception e)
     {
-        e.printStackTrace();
+        //e.printStackTrace();
         System.out.println("=====\n");
     }
 
@@ -85,9 +89,7 @@ class SearchFile {
             highlighter.setTextFragmenter(fragmenter); // Set fragment to highlight
 
             // STEP B
-            File indexFile = new File(LuceneConstants.INDEX_DIRECTORY);
-            Directory directory = FSDirectory.open(indexFile.toPath());
-            IndexReader indexReader = DirectoryReader.open(directory);
+            //In constructor
 
             // STEP C
             //System.out.println("query: " + query);
@@ -139,8 +141,8 @@ class SearchFile {
             return luceneHighlighter.searchAndHighLightKeywords(query);
         } catch (Exception e)
         {
-            System.out.println(query);
-            errorPrinter(e);
+            //System.out.println(query);
+            //errorPrinter(e);
         }
         return null;
 
@@ -163,7 +165,7 @@ class SearchFile {
             System.out.println(s1);
         }
     }
-
+/*
     public static void infoboxSearcher() throws FileNotFoundException, IOException
     {
 
@@ -226,5 +228,5 @@ class SearchFile {
         replaceAll = " AND Content:" + replaceAll;
         return replaceAll;
     }
-
+*/
 }

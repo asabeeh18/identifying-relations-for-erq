@@ -37,6 +37,7 @@ class WikiToken {
         {
             int startOffset = offsetAttribute.startOffset();
             int endOffset = offsetAttribute.endOffset();
+            offsetAttribute.
             String term = charTermAttribute.toString();
             System.out.print(term+" ");
         }
